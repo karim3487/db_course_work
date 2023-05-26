@@ -6,7 +6,8 @@ exclude =
     *.py[co],
     __pycache__,
     venv,
-    .env
+    .env,
+    */migrations/*
 
 ignore =
     E121,
@@ -39,7 +40,6 @@ ignore =
 
 max_lines=120
 
-exclude=*/migrations/*
 per-file-ignores =
     ./hospital/settings.py:F405,F403,F401
     ./app/apps.py:F40
