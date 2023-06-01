@@ -5,112 +5,239 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Bill',
+            name="Bill",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Time of creation')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Last update time')),
-                ('is_amount_insured', models.BooleanField(default=False)),
-                ('date_sent', models.DateField(auto_now_add=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=8)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, help_text="Time of creation"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, help_text="Last update time"),
+                ),
+                ("is_amount_insured", models.BooleanField(default=False)),
+                ("date_sent", models.DateField(auto_now_add=True)),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=8)),
             ],
             options={
-                'verbose_name': 'Счет за прием',
-                'verbose_name_plural': 'Счет за приемы',
-                'ordering': ('date_sent',),
+                "verbose_name": "Счет за прием",
+                "verbose_name_plural": "Счет за приемы",
+                "ordering": ("date_sent",),
             },
         ),
         migrations.CreateModel(
-            name='Doctor',
+            name="Doctor",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Time of creation')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Last update time')),
-                ('first_name', models.CharField(help_text='Имя', max_length=32)),
-                ('last_name', models.CharField(help_text='Фамилия', max_length=32)),
-                ('surname', models.CharField(help_text='Отчество', max_length=32)),
-                ('speciality', models.CharField(help_text='Специальность', max_length=64)),
-                ('phone_number', models.CharField(help_text='Номер телефона', max_length=64)),
-                ('email', models.EmailField(max_length=254)),
-                ('address', models.CharField(help_text='Адрес', max_length=254)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, help_text="Time of creation"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, help_text="Last update time"),
+                ),
+                ("first_name", models.CharField(help_text="Имя", max_length=32)),
+                ("last_name", models.CharField(help_text="Фамилия", max_length=32)),
+                ("surname", models.CharField(help_text="Отчество", max_length=32)),
+                (
+                    "speciality",
+                    models.CharField(help_text="Специальность", max_length=64),
+                ),
+                (
+                    "phone_number",
+                    models.CharField(help_text="Номер телефона", max_length=64),
+                ),
+                ("email", models.EmailField(max_length=254)),
+                ("address", models.CharField(help_text="Адрес", max_length=254)),
             ],
             options={
-                'verbose_name': 'Врач',
-                'verbose_name_plural': 'Врачи',
-                'ordering': ('last_name',),
+                "verbose_name": "Врач",
+                "verbose_name_plural": "Врачи",
+                "ordering": ("last_name",),
             },
         ),
         migrations.CreateModel(
-            name='InsuranceCompany',
+            name="InsuranceCompany",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Time of creation')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Last update time')),
-                ('name', models.CharField(help_text='Название компании', max_length=128)),
-                ('phone_number', models.CharField(help_text='Номер телефона', max_length=128)),
-                ('address', models.CharField(help_text='Адрес страховой компании', max_length=254)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, help_text="Time of creation"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, help_text="Last update time"),
+                ),
+                (
+                    "name",
+                    models.CharField(help_text="Название компании", max_length=128),
+                ),
+                (
+                    "phone_number",
+                    models.CharField(help_text="Номер телефона", max_length=128),
+                ),
+                (
+                    "address",
+                    models.CharField(
+                        help_text="Адрес страховой компании", max_length=254
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Страховая компания',
-                'verbose_name_plural': 'Страховые компании',
-                'ordering': ('name',),
+                "verbose_name": "Страховая компания",
+                "verbose_name_plural": "Страховые компании",
+                "ordering": ("name",),
             },
         ),
         migrations.CreateModel(
-            name='Payment',
+            name="Payment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=8)),
-                ('date', models.DateField()),
-                ('bill', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.bill')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("amount", models.DecimalField(decimal_places=2, max_digits=8)),
+                ("date", models.DateField()),
+                (
+                    "bill",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="app.bill"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Платеж',
-                'verbose_name_plural': 'Платежи',
-                'ordering': ('date',),
+                "verbose_name": "Платеж",
+                "verbose_name_plural": "Платежи",
+                "ordering": ("date",),
             },
         ),
         migrations.CreateModel(
-            name='Patient',
+            name="Patient",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Time of creation')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Last update time')),
-                ('first_name', models.CharField(help_text='Имя', max_length=32)),
-                ('last_name', models.CharField(help_text='Фамилия', max_length=32)),
-                ('surname', models.CharField(help_text='Отчество', max_length=32)),
-                ('phone_number', models.CharField(help_text='Номер', max_length=64)),
-                ('address', models.CharField(help_text='Адрес', max_length=254)),
-                ('insurance_company', models.ForeignKey(blank=True, help_text='Страховая компания, в которой зарегистрирован пациент (необязательное)', null=True, on_delete=django.db.models.deletion.CASCADE, to='app.insurancecompany')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, help_text="Time of creation"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, help_text="Last update time"),
+                ),
+                ("first_name", models.CharField(help_text="Имя", max_length=32)),
+                ("last_name", models.CharField(help_text="Фамилия", max_length=32)),
+                ("surname", models.CharField(help_text="Отчество", max_length=32)),
+                ("phone_number", models.CharField(help_text="Номер", max_length=64)),
+                ("address", models.CharField(help_text="Адрес", max_length=254)),
+                (
+                    "insurance_company",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="Страховая компания, в которой зарегистрирован пациент (необязательное)",
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app.insurancecompany",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Пациент',
-                'verbose_name_plural': 'Пациенты',
-                'ordering': ('last_name',),
+                "verbose_name": "Пациент",
+                "verbose_name_plural": "Пациенты",
+                "ordering": ("last_name",),
             },
         ),
         migrations.CreateModel(
-            name='Appointment',
+            name="Appointment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_at', models.DateTimeField(auto_now_add=True, help_text='Time of creation')),
-                ('updated_at', models.DateTimeField(auto_now=True, help_text='Last update time')),
-                ('datetime', models.DateTimeField(help_text='Дата и время приема')),
-                ('doctor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.doctor')),
-                ('patient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.patient')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.DateTimeField(
+                        auto_now_add=True, help_text="Time of creation"
+                    ),
+                ),
+                (
+                    "updated_at",
+                    models.DateTimeField(auto_now=True, help_text="Last update time"),
+                ),
+                ("datetime", models.DateTimeField(help_text="Дата и время приема")),
+                (
+                    "doctor",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="app.doctor"
+                    ),
+                ),
+                (
+                    "patient",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="app.patient"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Прием у врача',
-                'verbose_name_plural': 'Приемы у врачей',
-                'ordering': ('datetime',),
+                "verbose_name": "Прием у врача",
+                "verbose_name_plural": "Приемы у врачей",
+                "ordering": ("datetime",),
             },
         ),
     ]
