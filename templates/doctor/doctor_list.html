@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link href="{% static 'css/doctor.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block actions %}
+    <div class="d-flex justify-content-between flex-row-reverse">
+        <a href="{% url 'doc:create_doc' %}" class="btn btn-primary my-1">Добавить врача</a>
+    </div>
+{% endblock %}
+
+{% block ths %}
+    <th scope="col">ФИО</th>
+    <th scope="col">Специальность</th>
+    <th scope="col">Номер телефона</th>
+    <th scope="col">E-mail</th>
+    <th scope="col">Адрес</th>
+    <th scope="col">Действия</th>
+{% endblock %}
+
+{% block trs %}
+    {% for doctor in object_list %}
+        <tr>
+            <td class="align-middle">{{ doctor.full_name }}</td>
+            <td class="align-middle">{{ doctor.speciality }}</td>
+            <td class="align-middle">{{ doctor.phone_number }}</td>
+            <td class="align-middle">{{ doctor.email }}</td>
+            <td class="align-middle">{{ doctor.address }}</td>
+            <td class="align-middle">
+                <button type="button" class="btn btn-success">
+                    <i class="fa-solid fa-edit"></i>
+                </button>
+                <button type="button" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

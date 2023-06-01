@@ -21,7 +21,11 @@ class Doctor(BaseDatesModel):
 
     @property
     def full_name(self):
-        return f"{self.last_name} {self.first_name[0]} {self.surname[0]}"
+        return f"{self.last_name} {self.first_name} {self.surname}"
+
+    @property
+    def short_name(self):
+        return f"{self.last_name} {self.first_name[0]}. {self.surname[0]}."
 
     class Meta:
         ordering = ("last_name",)
@@ -29,7 +33,7 @@ class Doctor(BaseDatesModel):
         verbose_name_plural = "Врачи"
 
     def __str__(self):
-        return f"{self.full_name} {self.speciality}"
+        return f"{self.short_name} — {self.speciality}"
 
 
 class InsuranceCompany(BaseDatesModel):
@@ -64,13 +68,17 @@ class Patient(BaseDatesModel):
     def full_name(self):
         return f"{self.last_name} {self.first_name[0]} {self.surname[0]}"
 
+    @property
+    def short_name(self):
+        return f"{self.last_name} {self.first_name[0]}. {self.surname[0]}."
+
     class Meta:
         ordering = ("last_name",)
         verbose_name = "Пациент"
         verbose_name_plural = "Пациенты"
 
     def __str__(self):
-        return f"{self.full_name}"
+        return f"{self.short_name}"
 
 
 class Appointment(BaseDatesModel):
