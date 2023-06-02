@@ -25,24 +25,8 @@
 </head>
 
 <body>
-<div class="header bg-light">
-    <div class="container">
-        <header class="p-3 text-white">
-            <div class="container">
-                <div class="d-flex justify-content-center">
-                    <ul class="nav nav-pills">
-                        <li><a href="#" class="nav-link px-2 text-black fs-40">Врачи</a></li>
-                        <li><a href="#" class="nav-link px-2 text-secondary fs-18">Features</a></li>
-                        <li><a href="#" class="nav-link px-2 text-secondary fs-18">Pricing</a></li>
-                        <li><a href="#" class="nav-link px-2 text-secondary fs-18">FAQs</a></li>
-                        <li><a href="#" class="nav-link px-2 text-secondary fs-18">About</a></li>
-                    </ul>
-                </div>
+{% include 'header.html' %}
 
-            </div>
-        </header>
-    </div>
-</div>
 
 <div class="container">
     {% if header %}
@@ -55,7 +39,7 @@
             <div class="card">
                 <div class="card-body p-0">
                     <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true"
-                         style="position: relative; height: 700px">
+                         style="position: relative; height: 800px">
                         <table class="table table-hover mb-0">
                             <thead style="background-color: #002d72;" class="py-3">
                             <tr>

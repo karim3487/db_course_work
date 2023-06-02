@@ -1,5 +1,7 @@
 from django.http import HttpResponse
-from django.views.generic import CreateView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView
+from openpyxl import Workbook
 
 from app.forms import DoctorCreationForm
 from app.models import Doctor
@@ -10,16 +12,9 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
-class DoctorCreateView(TitleMixin, CreateView):
-    model = Doctor
-    form_class = DoctorCreationForm
-    template_name = "doctor/doctor_add.html"
-    title = "Регистрация"
-
-
 class DoctorsListView(TitleMixin, ListView):
     model = Doctor
-    template_name = "doctor/doctor_list.html"
+    template_name = "doctor/list.html"
     title = "Врачи"
     header = "Таблица с врачами"
 
@@ -31,6 +26,49 @@ class DoctorsListView(TitleMixin, ListView):
         context = super(DoctorsListView, self).get_context_data()
         return context
 
+
+class DoctorCreateView(TitleMixin, CreateView):
+    model = Doctor
+    form_class = DoctorCreationForm
+    template_name = "doctor/create.html"
+    success_url = reverse_lazy('doc:doctors')
+    title = "Добавление врача"
+
+
+class DoctorUpdateView(TitleMixin, UpdateView):
+    model = Doctor
+    form_class = DoctorCreationForm
+    title = "Изменение врача"
+    template_name = 'doctor/update.html'
+    success_url = reverse_lazy('doc:doctors')
+
+
+class DoctorDeleteView(TitleMixin, DeleteView):
+    model = Doctor
+    success_url = reverse_lazy('doc:doctors')
+    template_name = "doctor/confirm_delete.html"
+    title = "Удаление врача"
+
+
+def export_doctors(request):
+    queryset = Doctor.objects.all()
+
+    workbook = Workbook()
+    sheet = workbook.active
+
+    headers = ['ФИО', 'Специальность', 'Номер телефона', 'E-mail', 'Адрес']
+    sheet.append(headers)
+
+    for item in queryset:
+        row = [item.full_name, item.speciality, item.phone_number, item.email, item.address]
+        sheet.append(row)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=doctors.xlsx'
+
+    workbook.save(response)
+
+    return response
 
 # def patient_list(request):
 #     patients = Patient.objects.all()

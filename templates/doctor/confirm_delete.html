@@ -1,0 +1,24 @@
+{% extends 'base_add.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row my-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <h5 class="card-header">Удаление врача</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="card-title">Вы уверены что хотите удалить "{{ object }}"?</div>
+                            {{ form }}
+                            <input class="btn btn-danger" type="submit" value="Удалить">
+                            <a href="{% url 'doc:doctors' %}" class="btn btn-primary">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_list.html' %}
 {% load static %}
 
 
@@ -7,8 +7,9 @@
 {% endblock %}
 
 {% block actions %}
-    <div class="d-flex justify-content-between flex-row-reverse">
+    <div class="d-flex flex-row-reverse">
         <a href="{% url 'doc:create_doc' %}" class="btn btn-primary my-1">Добавить врача</a>
+        <a href="{% url 'doc:export_doctors' %}" class="btn btn-success mx-2 my-1">Выгрузить данные</a>
     </div>
 {% endblock %}
 
@@ -30,12 +31,12 @@
             <td class="align-middle">{{ doctor.email }}</td>
             <td class="align-middle">{{ doctor.address }}</td>
             <td class="align-middle">
-                <button type="button" class="btn btn-success">
+                <a href="{% url 'doc:update_doc' doctor.pk %}" class="btn btn-success">
                     <i class="fa-solid fa-edit"></i>
-                </button>
-                <button type="button" class="btn btn-danger">
+                </a>
+                <a href="{% url 'doc:delete_doc' doctor.pk %}" class="btn btn-danger">
                     <i class="fa-solid fa-trash"></i>
-                </button>
+                </a>
             </td>
         </tr>
     {% endfor %}

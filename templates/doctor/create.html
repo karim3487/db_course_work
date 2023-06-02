@@ -1,0 +1,60 @@
+{% extends 'base_add.html' %}
+
+
+{% block content %}
+    <div class="container">
+        {% if form.errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                 style="margin-top: 50px;">
+                {{ form.errors }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        <form action="{% url 'doc:create_doc' %}" method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-9">
+                    <label class="form-label">ФИО</label>
+                    <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                        {{ form.last_name }}
+                        {{ form.first_name }}
+                        {{ form.surname }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Специальность</label>
+                    {{ form.speciality }}
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Номер телефона</label>
+                    {{ form.phone_number }}
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">E-mail</label>
+                    {{ form.email }}
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Адрес</label>
+                    {{ form.address }}
+                </div>
+            </div>
+
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Добавить доктора</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

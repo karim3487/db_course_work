@@ -3,35 +3,35 @@ from django import forms
 from app.models import Doctor
 
 
-class DoctorCreationForm:
+class DoctorCreationForm(forms.ModelForm):
     first_name = forms.CharField(
         widget=forms.TextInput(
-            attrs={"class": "form-control py-4", "placeholder": "Введите имя"}
+            attrs={"class": "form-control py-2", "placeholder": "Введите имя"}
         )
     )
 
     last_name = forms.CharField(
         widget=forms.TextInput(
-            attrs={"class": "form-control py-4", "placeholder": "Введите фамилию"}
+            attrs={"class": "form-control py-2", "placeholder": "Введите фамилию"}
         )
     )
 
     surname = forms.CharField(
         widget=forms.TextInput(
-            attrs={"class": "form-control py-4", "placeholder": "Введите отчество"}
+            attrs={"class": "form-control py-2", "placeholder": "Введите отчество"}
         )
     )
 
     speciality = forms.CharField(
         widget=forms.TextInput(
-            attrs={"class": "form-control py-4", "placeholder": "Введите специальность"}
+            attrs={"class": "form-control py-2", "placeholder": "Введите специальность"}
         )
     )
 
     phone_number = forms.CharField(
-        widget=forms.PasswordInput(
+        widget=forms.TextInput(
             attrs={
-                "class": "form-control py-4",
+                "class": "form-control py-2",
                 "placeholder": "Введите номер телефона",
             }
         )
@@ -40,16 +40,16 @@ class DoctorCreationForm:
     email = forms.CharField(
         widget=forms.EmailInput(
             attrs={
-                "class": "form-control py-4",
+                "class": "form-control py-2",
                 "placeholder": "Введите адрес эл. почты",
             }
         )
     )
 
     address = forms.CharField(
-        widget=forms.PasswordInput(
+        widget=forms.TextInput(
             attrs={
-                "class": "form-control py-4",
+                "class": "form-control py-2",
                 "placeholder": "Введите адрес проживания",
             }
         )
