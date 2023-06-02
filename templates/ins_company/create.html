@@ -12,54 +12,47 @@
                 </button>
             </div>
         {% endif %}
-        <form action="{% url 'hospital:update_pat' patient.id %}" method="post">
+        <form action="{% url 'hospital:create_ins_company' %}" method="post">
             {% csrf_token %}
             <div class="row justify-content-center mb-3">
                 <div class="col-md-9">
-                    <label class="form-label">ФИО</label>
+                    <label class="form-label">Название</label>
                     <div class="input-group">
                         <span class="input-group-text">
-                            <i class="fa-solid fa-user"></i>
+                            <i class="fa-solid fa-shield"></i>
                         </span>
-                        {{ form.last_name }}
-                        {{ form.first_name }}
-                        {{ form.surname }}
+                        {{ form.name }}
                     </div>
                 </div>
             </div>
 
             <div class="row justify-content-center mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Номер телефона</label>
-                    <div class="input-group">
+                <div class="col-md-9">
+                    <div class="row justify-content-between">
+                        <div class="col-md-6">
+                            <label class="form-label">Номер телефона</label>
+                            <div class="input-group">
                         <span class="input-group-text">
                             <i class="fa-solid fa-phone"></i>
                         </span>
-                        {{ form.phone_number }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Адрес</label>
-                    <div class="input-group">
+                                {{ form.phone_number }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Адрес</label>
+                            <div class="input-group">
                         <span class="input-group-text">
                             <i class="fa-solid fa-location"></i>
                         </span>
-                        {{ form.address }}
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Страховая компания</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fa-solid fa-shield"></i>
-                        </span>
-                        {{ form.insurance_company }}
+                                {{ form.address }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row justify-content-center mb-3">
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary btn-block col-12">Изменить пациента</button>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block col-12">Добавить страховую компанию</button>
                 </div>
             </div>
         </form>

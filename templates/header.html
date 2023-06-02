@@ -16,7 +16,12 @@
                                 Пациенты
                             </a>
                         </li>
-                        <li><a href="#" class="nav-link px-2 text-secondary fs-18">Pricing</a></li>
+                        <li>
+                            <a href="{% url 'hospital:ins_companies' %}"
+                               class="nav-link px-2 {% if request.path == '/insurance-companies/' %}text-black{% else %}text-secondary{% endif %} fs-18">
+                                Страховые компании
+                            </a>
+                        </li>
                         <li><a href="#" class="nav-link px-2 text-secondary fs-18">FAQs</a></li>
                         <li><a href="#" class="nav-link px-2 text-secondary fs-18">About</a></li>
                     </ul>

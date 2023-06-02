@@ -1,0 +1,39 @@
+{% extends 'base_list.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block actions %}
+    <div class="d-flex flex-row-reverse">
+        <a href="{% url 'hospital:create_ins_company' %}" class="btn btn-primary my-1">Добавить страховую компанию</a>
+        <a href="{% url 'hospital:export_ins_companies' %}" class="btn btn-success mx-2 my-1">Выгрузить данные</a>
+    </div>
+{% endblock %}
+
+{% block ths %}
+    <th scope="col">Название</th>
+    <th scope="col">Номер телефона</th>
+    <th scope="col">Адрес</th>
+    <th scope="col">Действия</th>
+{% endblock %}
+
+{% block trs %}
+    {% for company in object_list %}
+        <tr>
+            <td class="align-middle">{{ company.name }}</td>
+            <td class="align-middle">{{ company.phone_number }}</td>
+            <td class="align-middle">{{ company.address }}</td>
+            <td class="align-middle">
+                <a href="{% url 'hospital:update_ins_company' company.pk %}" class="btn btn-success">
+                    <i class="fa-solid fa-edit"></i>
+                </a>
+                <a href="{% url 'hospital:delete_ins_company' company.pk %}" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

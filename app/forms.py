@@ -107,12 +107,13 @@ class PatientCreationForm(forms.ModelForm):
 
     insurance_company = forms.ModelChoiceField(
         queryset=InsuranceCompany.objects.all(),
+        required=False,
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
-                "placeholder": "Выберите страховую компанию"
+                "placeholder": "Выберите страховую компанию",
             }
-        )
+        ),
     )
 
     class Meta:
@@ -124,4 +125,41 @@ class PatientCreationForm(forms.ModelForm):
             "phone_number",
             "address",
             "insurance_company",
+        )
+
+
+class InsuranceCompanyCreationForm(forms.ModelForm):
+    name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control py-2",
+                "placeholder": "Введите название компании",
+            }
+        )
+    )
+
+    phone_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control py-2",
+                "placeholder": "Введите номер телефона",
+            }
+        )
+    )
+
+    address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control py-2",
+                "placeholder": "Введите адрес",
+            }
+        )
+    )
+
+    class Meta:
+        model = InsuranceCompany
+        fields = (
+            "name",
+            "phone_number",
+            "address",
         )
