@@ -4,8 +4,18 @@
             <div class="container">
                 <div class="d-flex justify-content-center">
                     <ul class="nav nav-pills">
-                        <li><a href="#" class="nav-link px-2 text-black fs-40">Врачи</a></li>
-                        <li><a href="#" class="nav-link px-2 text-secondary fs-18">Features</a></li>
+                        <li>
+                            <a href="{% url 'hospital:doctors' %}"
+                               class="nav-link px-2 {% if request.path == '/doctors/' %}text-black{% else %}text-secondary{% endif %} fs-18">
+                                Врачи
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'hospital:patients' %}"
+                               class="nav-link px-2 {% if request.path == '/patients/' %}text-black{% else %}text-secondary{% endif %} fs-18">
+                                Пациенты
+                            </a>
+                        </li>
                         <li><a href="#" class="nav-link px-2 text-secondary fs-18">Pricing</a></li>
                         <li><a href="#" class="nav-link px-2 text-secondary fs-18">FAQs</a></li>
                         <li><a href="#" class="nav-link px-2 text-secondary fs-18">About</a></li>

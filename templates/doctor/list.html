@@ -3,13 +3,13 @@
 
 
 {% block css %}
-    <link href="{% static 'css/doctor.css' %}" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block actions %}
     <div class="d-flex flex-row-reverse">
-        <a href="{% url 'doc:create_doc' %}" class="btn btn-primary my-1">Добавить врача</a>
-        <a href="{% url 'doc:export_doctors' %}" class="btn btn-success mx-2 my-1">Выгрузить данные</a>
+        <a href="{% url 'hospital:create_doc' %}" class="btn btn-primary my-1">Добавить врача</a>
+        <a href="{% url 'hospital:export_doctors' %}" class="btn btn-success mx-2 my-1">Выгрузить данные</a>
     </div>
 {% endblock %}
 
@@ -31,10 +31,10 @@
             <td class="align-middle">{{ doctor.email }}</td>
             <td class="align-middle">{{ doctor.address }}</td>
             <td class="align-middle">
-                <a href="{% url 'doc:update_doc' doctor.pk %}" class="btn btn-success">
+                <a href="{% url 'hospital:update_doc' doctor.pk %}" class="btn btn-success">
                     <i class="fa-solid fa-edit"></i>
                 </a>
-                <a href="{% url 'doc:delete_doc' doctor.pk %}" class="btn btn-danger">
+                <a href="{% url 'hospital:delete_doc' doctor.pk %}" class="btn btn-danger">
                     <i class="fa-solid fa-trash"></i>
                 </a>
             </td>

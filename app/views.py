@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 from openpyxl import Workbook
 
-from app.forms import DoctorCreationForm
-from app.models import Doctor
+from app.forms import DoctorCreationForm, PatientCreationForm
+from app.models import Doctor, Patient
 from common.views import TitleMixin
 
 
@@ -12,18 +12,19 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 
-class DoctorsListView(TitleMixin, ListView):
+# DOCTOR:---------------------------------------------------------------------------------------------------------------
+class DoctorListView(TitleMixin, ListView):
     model = Doctor
     template_name = "doctor/list.html"
     title = "Врачи"
     header = "Таблица с врачами"
 
     def get_queryset(self):
-        queryset = super(DoctorsListView, self).get_queryset()
+        queryset = super(DoctorListView, self).get_queryset()
         return queryset.all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(DoctorsListView, self).get_context_data()
+        context = super(DoctorListView, self).get_context_data()
         return context
 
 
@@ -31,7 +32,7 @@ class DoctorCreateView(TitleMixin, CreateView):
     model = Doctor
     form_class = DoctorCreationForm
     template_name = "doctor/create.html"
-    success_url = reverse_lazy('doc:doctors')
+    success_url = reverse_lazy("hospital:doctors")
     title = "Добавление врача"
 
 
@@ -39,14 +40,14 @@ class DoctorUpdateView(TitleMixin, UpdateView):
     model = Doctor
     form_class = DoctorCreationForm
     title = "Изменение врача"
-    template_name = 'doctor/update.html'
-    success_url = reverse_lazy('doc:doctors')
+    template_name = "doctor/update.html"
+    success_url = reverse_lazy("hospital:doctors")
 
 
 class DoctorDeleteView(TitleMixin, DeleteView):
     model = Doctor
-    success_url = reverse_lazy('doc:doctors')
-    template_name = "doctor/confirm_delete.html"
+    success_url = reverse_lazy("hospital:doctors")
+    template_name = "confirm_delete.html"
     title = "Удаление врача"
 
 
@@ -56,15 +57,90 @@ def export_doctors(request):
     workbook = Workbook()
     sheet = workbook.active
 
-    headers = ['ФИО', 'Специальность', 'Номер телефона', 'E-mail', 'Адрес']
+    headers = ["ФИО", "Специальность", "Номер телефона", "E-mail", "Адрес"]
     sheet.append(headers)
 
     for item in queryset:
-        row = [item.full_name, item.speciality, item.phone_number, item.email, item.address]
+        row = [
+            item.full_name,
+            item.speciality,
+            item.phone_number,
+            item.email,
+            item.address,
+        ]
         sheet.append(row)
 
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=doctors.xlsx'
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=doctors.xlsx"
+
+    workbook.save(response)
+
+    return response
+
+
+# PATIENT:--------------------------------------------------------------------------------------------------------------
+class PatientListView(TitleMixin, ListView):
+    model = Patient
+    template_name = "patient/list.html"
+    title = "Пациенты"
+    header = "Таблица с пациентами"
+
+    def get_queryset(self):
+        queryset = super(PatientListView, self).get_queryset()
+        return queryset.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PatientListView, self).get_context_data()
+        return context
+
+
+class PatientCreateView(TitleMixin, CreateView):
+    model = Patient
+    form_class = PatientCreationForm
+    template_name = "patient/create.html"
+    success_url = reverse_lazy("hospital:patients")
+    title = "Добавление пациента"
+
+
+class PatientUpdateView(TitleMixin, UpdateView):
+    model = Patient
+    form_class = PatientCreationForm
+    title = "Изменение пациента"
+    template_name = "patient/update.html"
+    success_url = reverse_lazy("hospital:doctors")
+
+
+class PatientDeleteView(TitleMixin, DeleteView):
+    model = Doctor
+    success_url = reverse_lazy("hospital:doctors")
+    template_name = "confirm_delete.html"
+    title = "Удаление пациента"
+
+
+def export_patients(request):
+    queryset = Patient.objects.all()
+
+    workbook = Workbook()
+    sheet = workbook.active
+
+    headers = ["ФИО", "Номер телефона", "Адрес", "Страховая компания"]
+    sheet.append(headers)
+
+    for item in queryset:
+        row = [
+            item.full_name,
+            item.phone_number,
+            item.address,
+            item.insurance_company.name if item.insurance_company else "Не застрахован"
+        ]
+        sheet.append(row)
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=patients.xlsx"
 
     workbook.save(response)
 

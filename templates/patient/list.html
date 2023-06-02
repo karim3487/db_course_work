@@ -1,0 +1,45 @@
+{% extends 'base_list.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block actions %}
+    <div class="d-flex flex-row-reverse">
+        <a href="{% url 'hospital:create_pat' %}" class="btn btn-primary my-1">Добавить пациента</a>
+        <a href="{% url 'hospital:export_patients' %}" class="btn btn-success mx-2 my-1">Выгрузить данные</a>
+    </div>
+{% endblock %}
+
+{% block ths %}
+    <th scope="col">ФИО</th>
+    <th scope="col">Номер телефона</th>
+    <th scope="col">Адрес</th>
+    <th scope="col">Страховая компания</th>
+    <th scope="col">Действия</th>
+{% endblock %}
+
+{% block trs %}
+    {% for patient in object_list %}
+        <tr>
+            <td class="align-middle">{{ patient.full_name }}</td>
+            <td class="align-middle">{{ patient.phone_number }}</td>
+            <td class="align-middle">{{ patient.address }}</td>
+            <td class="align-middle">{% if patient.insurance_company %}
+                {{ patient.insurance_company.name }}
+            {% else %}
+                Не застрахован
+            {% endif %} </td>
+            <td class="align-middle">
+                <a href="{% url 'hospital:update_pat' patient.pk %}" class="btn btn-success">
+                    <i class="fa-solid fa-edit"></i>
+                </a>
+                <a href="{% url 'hospital:delete_pat' patient.pk %}" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

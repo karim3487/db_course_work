@@ -66,7 +66,7 @@ class Patient(BaseDatesModel):
 
     @property
     def full_name(self):
-        return f"{self.last_name} {self.first_name[0]} {self.surname[0]}"
+        return f"{self.last_name} {self.first_name} {self.surname}"
 
     @property
     def short_name(self):

@@ -12,7 +12,7 @@
                 </button>
             </div>
         {% endif %}
-        <form action="{% url 'doc:create_doc' %}" method="post">
+        <form action="{% url 'hospital:create_doc' %}" method="post">
             {% csrf_token %}
             <div class="row justify-content-center mb-3">
                 <div class="col-md-9">
@@ -29,29 +29,57 @@
             </div>
 
             <div class="row justify-content-center mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">Специальность</label>
-                    {{ form.speciality }}
-                </div>
-                <div class="col-md-5">
-                    <label class="form-label">Номер телефона</label>
-                    {{ form.phone_number }}
+                <div class="col-md-9">
+                    <div class="row justify-content-between">
+                        <div class="col-md-6">
+                            <label class="form-label">Специальность</label>
+                            <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-stethoscope"></i>
+                        </span>
+                                {{ form.speciality }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Номер телефона</label>
+                            <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-phone"></i>
+                        </span>
+                                {{ form.phone_number }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row justify-content-center mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">E-mail</label>
-                    {{ form.email }}
-                </div>
-                <div class="col-md-5">
-                    <label class="form-label">Адрес</label>
-                    {{ form.address }}
+                <div class="col-md-9">
+                    <div class="row justify-content-between">
+                        <div class="col-md-6">
+                            <label class="form-label">E-mail</label>
+                            <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-envelope"></i>
+                        </span>
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Адрес</label>
+                            <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-location"></i>
+                        </span>
+                                {{ form.address }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="row justify-content-center mb-3">
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">Добавить доктора</button>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-block col-12">Добавить доктора</button>
                 </div>
             </div>
         </form>
