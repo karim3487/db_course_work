@@ -31,7 +31,7 @@
             {% endif %} руб.
             </td>
             <td class="align-middle">
-                {% if bill_payment.balance %}
+                {% if bill_payment.balance != None %}
                     {% if bill_payment.balance > 0 %}
                         {{ bill_payment.balance }} руб.
                     {% else %}

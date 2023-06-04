@@ -1,0 +1,46 @@
+{% extends 'base_list.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block actions %}
+    <div class="d-flex flex-row-reverse">
+        <a href="{% url 'hospital:create_payment' %}" class="btn btn-primary my-1">Добавить платеж</a>
+        <a href="{% url 'hospital:export_payments' %}" class="btn btn-success mx-2 my-1">Выгрузить данные</a>
+    </div>
+{% endblock %}
+
+{% block ths %}
+    <th scope="col">Пациент</th>
+    <th scope="col">Страховая компания</th>
+    <th scope="col">Счет</th>
+    <th scope="col">Сумма</th>
+    <th scope="col">Действия</th>
+{% endblock %}
+
+{% block trs %}
+    {% for payment in object_list %}
+        <tr>
+            <td class="align-middle">{{ payment.patient }}</td>
+            <td class="align-middle">{% if payment.insurance_company %}
+                {{ payment.insurance_company }}
+            {% else %}
+                Не застрахован
+            {% endif %}
+            </td>
+            <td class="align-middle">{{ payment.bill }}</td>
+            <td class="align-middle">{{ payment.amount }} руб.</td>
+            <td class="align-middle">
+                <a href="{% url 'hospital:update_payment' payment.pk %}" class="btn btn-success">
+                    <i class="fa-solid fa-edit"></i>
+                </a>
+                <a href="{% url 'hospital:delete_payment' payment.pk %}" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

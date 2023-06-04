@@ -28,7 +28,7 @@ from .views import (
     AppointmentCreateView,
     AppointmentUpdateView,
     AppointmentDeleteView,
-    export_appointments,
+    export_appointments, PaymentListView, PaymentCreateView, PaymentUpdateView, PaymentDeleteView, export_payments,
 )
 
 app_name = "hospital"
@@ -85,6 +85,12 @@ urlpatterns = [
     path("bills/<pk>/update", BillUpdateView.as_view(), name="update_bill"),
     path("bills/<pk>/delete", BillDeleteView.as_view(), name="delete_bill"),
     path("bills/export/", export_bills, name="export_bills"),
+    # payment
+    path("payments/", PaymentListView.as_view(), name="payments"),
+    path("payments/create", PaymentCreateView.as_view(), name="create_payment"),
+    path("payments/<pk>/update", PaymentUpdateView.as_view(), name="update_payment"),
+    path("payments/<pk>/delete", PaymentDeleteView.as_view(), name="delete_payment"),
+    path("payments/export/", export_payments, name="export_payments"),
     # bill_payment
     path("bill-payments/", BillPaymentListView.as_view(), name="bill-payments"),
     path("bill-payments/export/", export_bill_payments, name="export_bill_payments"),

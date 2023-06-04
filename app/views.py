@@ -1,7 +1,9 @@
 import locale
+from datetime import datetime
 
 from django.db.models import Sum, F
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils import formats
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
@@ -12,7 +14,7 @@ from app.forms import (
     PatientCreationForm,
     InsuranceCompanyCreationForm,
     AppointmentCreationForm,
-    BillCreationForm,
+    BillCreationForm, PaymentCreationForm,
 )
 from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment
 from common.views import TitleMixin
@@ -357,6 +359,91 @@ def export_bills(request):
     return response
 
 
+# PAYMENT:-----------------------------------------------------------------------------------------------------------------
+class PaymentListView(TitleMixin, ListView):
+    model = Payment
+    template_name = "payment/list.html"
+    title = "Платежи"
+    header = "Таблица с платежами"
+
+    def get_queryset(self):
+        queryset = super(PaymentListView, self).get_queryset()
+        return queryset.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PaymentListView, self).get_context_data()
+        return context
+
+
+class PaymentCreateView(TitleMixin, CreateView):
+    model = Payment
+    form_class = PaymentCreationForm
+    template_name = "payment/create.html"
+    title = "Добавление платежа"
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        bill = Bill.objects.get(id=data['bill'])
+        patient = bill.appointment.patient
+        ins_company = patient.insurance_company
+
+        date_str = '04.06.2023'
+        date_obj = datetime.strptime(date_str, '%d.%m.%Y')
+        formatted_date_str = date_obj.strftime('%Y-%m-%d')
+        payment = Payment(
+            patient=patient,
+            insurance_company=ins_company,
+            bill=bill,
+            amount=data['amount'],
+            date=formatted_date_str
+        )
+        payment.save()
+        return redirect('hospital:payments')
+
+
+class PaymentUpdateView(TitleMixin, UpdateView):
+    model = Payment
+    form_class = PaymentCreationForm
+    title = "Изменение платежа"
+    template_name = "bill/update.html"
+    success_url = reverse_lazy("hospital:payments")
+
+
+class PaymentDeleteView(TitleMixin, DeleteView):
+    model = Payment
+    success_url = reverse_lazy("hospital:payments")
+    template_name = "confirm_delete.html"
+    title = "Удаление платежа"
+
+
+def export_payments(request):
+    queryset = Bill.objects.all()
+
+    workbook = Workbook()
+    sheet = workbook.active
+
+    headers = ["Прием", "Застрахован ли пациент", "Дата отправки счета", "Сумма"]
+    sheet.append(headers)
+
+    for item in queryset:
+        row = [
+            str(item.appointment),
+            "Да" if item.is_amount_insured else "Нет",
+            str(formats.date_format(item.date_sent, format="d.m.Y")),
+            item.amount,
+        ]
+        sheet.append(row)
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=bills.xlsx"
+
+    workbook.save(response)
+
+    return response
+
+
 # BILL_PAYMENTS:--------------------------------------------------------------------------------------------------------
 class BillPaymentListView(TitleMixin, ListView):
     template_name = "bill_payments/list.html"
@@ -408,7 +495,6 @@ def export_bill_payments(request):
     workbook.save(response)
 
     return response
-
 
 # def patient_list(request):
 #     patients = Patient.objects.all()

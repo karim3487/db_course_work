@@ -34,6 +34,12 @@
                                 Счета
                             </a>
                         </li>
+                        <li>
+                            <a href="{% url 'hospital:payments' %}"
+                               class="nav-link px-2 {% if request.path == '/payments/' %}text-black{% else %}text-secondary{% endif %} fs-18">
+                                Платежи
+                            </a>
+                        </li>
                         <li><a href="{% url 'hospital:bill-payments' %}"
                                class="nav-link px-2 {% if request.path == '/bill-payments/' %}text-black{% else %}text-secondary{% endif %} fs-18">
                             Счета и платежи

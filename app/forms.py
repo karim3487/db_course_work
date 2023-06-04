@@ -1,6 +1,6 @@
 from django import forms
 
-from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill
+from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill, Payment
 from tempus_dominus.widgets import DateTimePicker, DatePicker
 
 
@@ -241,4 +241,64 @@ class BillCreationForm(forms.ModelForm):
             "appointment",
             "is_amount_insured",
             "amount",
+        )
+
+
+class PaymentCreationForm(forms.ModelForm):
+    bill = forms.ModelChoiceField(
+        queryset=Bill.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите страховую копанию",
+            }
+        ),
+    )
+
+    # patient = forms.ModelChoiceField(
+    #     queryset=Patient.objects.all(),
+    #     widget=forms.Select(
+    #         attrs={
+    #             "class": "form-select py-2",
+    #             "placeholder": "Выберите пациента",
+    #         }
+    #     ),
+    # )
+    #
+    # insurance_company = forms.ModelChoiceField(
+    #     queryset=InsuranceCompany.objects.all(),
+    #     widget=forms.Select(
+    #         attrs={
+    #             "class": "form-select py-2",
+    #             "placeholder": "Выберите страховую копанию",
+    #         }
+    #     ),
+    # )
+
+    amount = forms.FloatField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control py-2",
+                "placeholder": "Введите счет за прием",
+            }
+        )
+    )
+
+    date = forms.DateField(
+        widget=DatePicker(
+            attrs={
+                "class": "form-control py-2",
+                "placeholder": "Выберите дату",
+            }
+        )
+    )
+
+    class Meta:
+        model = Payment
+        fields = (
+            # "patient",
+            # "insurance_company",
+            "bill",
+            "amount",
+            "date",
         )

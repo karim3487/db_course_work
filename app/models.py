@@ -109,9 +109,7 @@ class Bill(models.Model):
         verbose_name_plural = "Счета за приемы"
 
     def __str__(self):
-        doctor_name = self.appointment.doctor.full_name
-        patient_name = self.appointment.patient.full_name
-        return f"{doctor_name} - {patient_name} - {self.amount}"
+        return f"{self.appointment.doctor} - {self.appointment.patient} - {self.amount}"
 
 
 class Payment(models.Model):
