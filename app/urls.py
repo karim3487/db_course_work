@@ -17,6 +17,7 @@ from .views import (
     InsuranceCompanyUpdateView,
     InsuranceCompanyDeleteView,
     export_ins_companies,
+    BillPaymentListView, export_bill_payments,
 )
 
 app_name = "hospital"
@@ -57,4 +58,8 @@ urlpatterns = [
     path(
         "insurance-companies/export/", export_ins_companies, name="export_ins_companies"
     ),
+
+    # bill_payment
+    path("bill-payments/", BillPaymentListView.as_view(), name="bill-payments"),
+    path("bill-payments/export/", export_bill_payments, name="export_bill_payments"),
 ]

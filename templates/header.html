@@ -22,7 +22,11 @@
                                 Страховые компании
                             </a>
                         </li>
-                        <li><a href="#" class="nav-link px-2 text-secondary fs-18">FAQs</a></li>
+
+                        <li><a href="{% url 'hospital:bill-payments' %}"
+                               class="nav-link px-2 {% if request.path == '/bill-payments/' %}text-black{% else %}text-secondary{% endif %} fs-18">
+                            Счета и платежи
+                        </a></li>
                         <li><a href="#" class="nav-link px-2 text-secondary fs-18">About</a></li>
                     </ul>
                 </div>

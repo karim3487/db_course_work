@@ -1,3 +1,4 @@
+from django.db.models import Sum, F
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
@@ -8,7 +9,7 @@ from app.forms import (
     PatientCreationForm,
     InsuranceCompanyCreationForm,
 )
-from app.models import Doctor, Patient, InsuranceCompany
+from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment
 from common.views import TitleMixin
 
 
@@ -216,6 +217,58 @@ def export_ins_companies(request):
 
     return response
 
+
+# BILL_PAYMENTS:--------------------------------------------------------------------------------------------------------
+class BillPaymentListView(TitleMixin, ListView):
+    template_name = "bill_payments/list.html"
+    context_object_name = "bill_payments"
+    title = "Счета"
+    header = "Таблица с счетами"
+
+    def get_queryset(self):
+        queryset = Bill.objects.annotate(total_payment=Sum("payment__amount")).annotate(
+            balance=F("amount") - F("total_payment")
+        )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        total_payment_sum = Payment.objects.aggregate(total=Sum("amount"))["total"]
+        context["total_payment_sum"] = total_payment_sum
+        return context
+
+
+def export_bill_payments(request):
+    queryset = Bill.objects.annotate(total_payment=Sum("payment__amount")).annotate(
+        balance=F("amount") - F("total_payment")
+    )
+    total_payment_sum = Payment.objects.aggregate(total=Sum("amount"))["total"]
+
+    workbook = Workbook()
+    sheet = workbook.active
+
+    headers = ["Сумма", "Дата отправки", "Общая сумма платежей", "Остаток"]
+    sheet.append(headers)
+
+    for item in queryset:
+        row = [
+            item.amount,
+            item.date_sent,
+            item.total_payment,
+            item.balance if item.balance > 0 else "Оплачено"
+        ]
+        sheet.append(row)
+
+    sheet.append(["Всего заработано", total_payment_sum])
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=bill_payments.xlsx"
+
+    workbook.save(response)
+
+    return response
 
 # def patient_list(request):
 #     patients = Patient.objects.all()
