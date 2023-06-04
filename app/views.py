@@ -11,7 +11,8 @@ from app.forms import (
     DoctorCreationForm,
     PatientCreationForm,
     InsuranceCompanyCreationForm,
-    AppointmentCreationForm, BillCreationForm,
+    AppointmentCreationForm,
+    BillCreationForm,
 )
 from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment
 from common.views import TitleMixin
@@ -262,7 +263,7 @@ class AppointmentDeleteView(TitleMixin, DeleteView):
 
 
 def export_appointments(request):
-    locale.setlocale(locale.LC_TIME, 'ru_RU')
+    locale.setlocale(locale.LC_TIME, "ru_RU")
     queryset = Appointment.objects.all()
 
     workbook = Workbook()
@@ -407,6 +408,7 @@ def export_bill_payments(request):
     workbook.save(response)
 
     return response
+
 
 # def patient_list(request):
 #     patients = Patient.objects.all()

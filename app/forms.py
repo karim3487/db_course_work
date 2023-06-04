@@ -213,7 +213,7 @@ class BillCreationForm(forms.ModelForm):
                 "class": "form-select py-2",
                 "placeholder": "Выберите прием",
             }
-        )
+        ),
     )
 
     is_amount_insured = forms.BooleanField(
@@ -223,7 +223,7 @@ class BillCreationForm(forms.ModelForm):
                 "class": "form-check-input",
                 "placeholder": "Введите номер телефона",
             }
-        )
+        ),
     )
 
     amount = forms.FloatField(

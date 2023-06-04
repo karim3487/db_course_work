@@ -48,7 +48,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-
 ]
 
 ROOT_URLCONF = "hospital.urls"
@@ -124,8 +123,8 @@ STATICFILES_DIRS = (BASE_DIR / "static",)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DATE_FORMAT = 'd.m.Y'
-DATETIME_FORMAT = 'd.m.Y H:i:s'
+DATE_FORMAT = "d.m.Y"
+DATETIME_FORMAT = "d.m.Y H:i:s"
 DATE_INPUT_FORMATS = ["%d.%m.%Y"]
 DATETIME_INPUT_FORMATS = ["%d.%m.%Y %H:%M:%S"]
 
