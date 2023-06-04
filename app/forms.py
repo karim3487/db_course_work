@@ -1,6 +1,7 @@
 from django import forms
 
-from app.models import Doctor, InsuranceCompany, Patient
+from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill
+from tempus_dominus.widgets import DateTimePicker, DatePicker
 
 
 class DoctorCreationForm(forms.ModelForm):
@@ -162,4 +163,82 @@ class InsuranceCompanyCreationForm(forms.ModelForm):
             "name",
             "phone_number",
             "address",
+        )
+
+
+class AppointmentCreationForm(forms.ModelForm):
+    doctor = forms.ModelChoiceField(
+        queryset=Doctor.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите доктора",
+            }
+        ),
+    )
+
+    patient = forms.ModelChoiceField(
+        queryset=Patient.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите пациента",
+            }
+        ),
+    )
+
+    datetime = forms.DateTimeField(
+        widget=DateTimePicker(
+            attrs={
+                "class": "form-control py-2",
+                "placeholder": "Выберите время и дату",
+            }
+        )
+    )
+
+    class Meta:
+        model = Appointment
+        fields = (
+            "doctor",
+            "patient",
+            "datetime",
+        )
+
+
+class BillCreationForm(forms.ModelForm):
+    appointment = forms.ModelChoiceField(
+        queryset=Appointment.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите прием",
+            }
+        )
+    )
+
+    is_amount_insured = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+                "placeholder": "Введите номер телефона",
+            }
+        )
+    )
+
+    amount = forms.FloatField(
+        widget=forms.NumberInput(
+            attrs={
+                "class": "form-control py-2",
+                "placeholder": "Введите счет за прием",
+            }
+        )
+    )
+
+    class Meta:
+        model = Bill
+        fields = (
+            "appointment",
+            "is_amount_insured",
+            "amount",
         )

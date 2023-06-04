@@ -1,0 +1,46 @@
+{% extends 'base_list.html' %}
+{% load static %}
+
+
+{% block css %}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block actions %}
+    <div class="d-flex flex-row-reverse">
+        <a href="{% url 'hospital:create_bill' %}" class="btn btn-primary my-1">Добавить счет</a>
+        <a href="{% url 'hospital:export_bills' %}" class="btn btn-success mx-2 my-1">Выгрузить данные</a>
+    </div>
+{% endblock %}
+
+{% block ths %}
+    <th scope="col">Прием</th>
+    <th scope="col">Застрахован ли пациент</th>
+    <th scope="col">Дата отправки</th>
+    <th scope="col">Сумма</th>
+    <th scope="col">Действия</th>
+{% endblock %}
+
+{% block trs %}
+    {% for bill in object_list %}
+        <tr>
+            <td class="align-middle">{{ bill.appointment }}</td>
+            <td class="align-middle">{% if bill.is_amount_insured %}
+                Да
+            {% else %}
+                Нет
+            {% endif %}
+            </td>
+            <td class="align-middle">{{ bill.date_sent }}</td>
+            <td class="align-middle">{{ bill.amount }} руб.</td>
+            <td class="align-middle">
+                <a href="{% url 'hospital:update_bill' bill.pk %}" class="btn btn-success">
+                    <i class="fa-solid fa-edit"></i>
+                </a>
+                <a href="{% url 'hospital:delete_bill' bill.pk %}" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}

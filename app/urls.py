@@ -19,6 +19,16 @@ from .views import (
     export_ins_companies,
     BillPaymentListView,
     export_bill_payments,
+    BillListView,
+    BillCreateView,
+    BillUpdateView,
+    BillDeleteView,
+    export_bills,
+    AppointmentListView,
+    AppointmentCreateView,
+    AppointmentUpdateView,
+    AppointmentDeleteView,
+    export_appointments,
 )
 
 app_name = "hospital"
@@ -59,6 +69,22 @@ urlpatterns = [
     path(
         "insurance-companies/export/", export_ins_companies, name="export_ins_companies"
     ),
+    # appointment
+    path("appointments/", AppointmentListView.as_view(), name="appointments"),
+    path("appointments/create", AppointmentCreateView.as_view(), name="create_app"),
+    path(
+        "appointments/<pk>/update", AppointmentUpdateView.as_view(), name="update_app"
+    ),
+    path(
+        "appointments/<pk>/delete", AppointmentDeleteView.as_view(), name="delete_app"
+    ),
+    path("appointments/export/", export_appointments, name="export_appointments"),
+    # bill
+    path("bills/", BillListView.as_view(), name="bills"),
+    path("bills/create", BillCreateView.as_view(), name="create_bill"),
+    path("bills/<pk>/update", BillUpdateView.as_view(), name="update_bill"),
+    path("bills/<pk>/delete", BillDeleteView.as_view(), name="delete_bill"),
+    path("bills/export/", export_bills, name="export_bills"),
     # bill_payment
     path("bill-payments/", BillPaymentListView.as_view(), name="bill-payments"),
     path("bill-payments/export/", export_bill_payments, name="export_bill_payments"),

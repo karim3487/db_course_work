@@ -1,0 +1,49 @@
+{% extends 'base_add.html' %}
+
+
+{% block content %}
+    <div class="container">
+        {% if form.errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                 style="margin-top: 50px;">
+                {{ form.errors }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endif %}
+        <form action="{% url 'hospital:update_app' appointment.pk %}" method="post">
+            {% csrf_token %}
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Врач</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-stethoscope"></i>
+                        </span>
+                        {{ form.doctor }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Пациент</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-person"></i>
+                        </span>
+                        {{ form.patient }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Дата и время</label>
+                        {{ form.datetime }}
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Изменить встречу</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

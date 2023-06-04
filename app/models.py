@@ -92,11 +92,13 @@ class Appointment(models.Model):
         verbose_name_plural = "Приемы у врачей"
 
     def __str__(self):
-        return f"{self.doctor} - {self.patient.full_name}"
+        return f"{self.doctor} - {self.patient}"
 
 
 class Bill(models.Model):
-    appointment = models.OneToOneField("Appointment", on_delete=models.CASCADE, related_name="bill", default=None)
+    appointment = models.OneToOneField(
+        "Appointment", on_delete=models.CASCADE, related_name="bill", default=None
+    )
     is_amount_insured = models.BooleanField(default=False)
     date_sent = models.DateField(auto_now_add=True)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
@@ -114,18 +116,14 @@ class Bill(models.Model):
 
 class Payment(models.Model):
     patient = models.ForeignKey(
-        Patient,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name="payment"
+        Patient, null=True, blank=True, on_delete=models.CASCADE, related_name="payment"
     )
     insurance_company = models.ForeignKey(
         InsuranceCompany,
         null=True,
         blank=True,
         on_delete=models.CASCADE,
-        related_name="payment"
+        related_name="payment",
     )
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE, related_name="payment")
     amount = models.DecimalField(max_digits=8, decimal_places=2)

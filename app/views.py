@@ -1,6 +1,9 @@
+import locale
+
 from django.db.models import Sum, F
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils import formats
 from django.views.generic import CreateView, ListView, DeleteView, UpdateView
 from openpyxl import Workbook
 
@@ -8,8 +11,9 @@ from app.forms import (
     DoctorCreationForm,
     PatientCreationForm,
     InsuranceCompanyCreationForm,
+    AppointmentCreationForm, BillCreationForm,
 )
-from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment
+from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment
 from common.views import TitleMixin
 
 
@@ -218,12 +222,146 @@ def export_ins_companies(request):
     return response
 
 
+# APPOINTMENT:----------------------------------------------------------------------------------------------------------
+class AppointmentListView(TitleMixin, ListView):
+    model = Appointment
+    template_name = "appointment/list.html"
+    title = "Приемы"
+    header = "Таблица с приемами"
+
+    def get_queryset(self):
+        queryset = super(AppointmentListView, self).get_queryset()
+        return queryset.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(AppointmentListView, self).get_context_data()
+        return context
+
+
+class AppointmentCreateView(TitleMixin, CreateView):
+    model = Appointment
+    form_class = AppointmentCreationForm
+    template_name = "appointment/create.html"
+    success_url = reverse_lazy("hospital:appointments")
+    title = "Добавление приема"
+
+
+class AppointmentUpdateView(TitleMixin, UpdateView):
+    model = Appointment
+    form_class = AppointmentCreationForm
+    title = "Изменение приема"
+    template_name = "appointment/update.html"
+    success_url = reverse_lazy("hospital:appointments")
+
+
+class AppointmentDeleteView(TitleMixin, DeleteView):
+    model = Appointment
+    success_url = reverse_lazy("hospital:appointments")
+    template_name = "confirm_delete.html"
+    title = "Удаление приема"
+
+
+def export_appointments(request):
+    locale.setlocale(locale.LC_TIME, 'ru_RU')
+    queryset = Appointment.objects.all()
+
+    workbook = Workbook()
+    sheet = workbook.active
+
+    headers = ["Доктор", "Пациент", "Дата и время"]
+    sheet.append(headers)
+
+    for item in queryset:
+        row = [
+            str(item.doctor),
+            str(item.patient),
+            str(formats.date_format(item.datetime, format="d.m.Y, H:i")),
+        ]
+        sheet.append(row)
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=appointments.xlsx"
+
+    workbook.save(response)
+
+    return response
+
+
+# BILL:-----------------------------------------------------------------------------------------------------------------
+class BillListView(TitleMixin, ListView):
+    model = Bill
+    template_name = "bill/list.html"
+    title = "Счета"
+    header = "Таблица со счетами"
+
+    def get_queryset(self):
+        queryset = super(BillListView, self).get_queryset()
+        return queryset.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(BillListView, self).get_context_data()
+        return context
+
+
+class BillCreateView(TitleMixin, CreateView):
+    model = Bill
+    form_class = BillCreationForm
+    template_name = "bill/create.html"
+    success_url = reverse_lazy("hospital:bills")
+    title = "Добавление счета"
+
+
+class BillUpdateView(TitleMixin, UpdateView):
+    model = Bill
+    form_class = BillCreationForm
+    title = "Изменение счета"
+    template_name = "bill/update.html"
+    success_url = reverse_lazy("hospital:bills")
+
+
+class BillDeleteView(TitleMixin, DeleteView):
+    model = Bill
+    success_url = reverse_lazy("hospital:bills")
+    template_name = "confirm_delete.html"
+    title = "Удаление счета"
+
+
+def export_bills(request):
+    queryset = Bill.objects.all()
+
+    workbook = Workbook()
+    sheet = workbook.active
+
+    headers = ["Прием", "Застрахован ли пациент", "Дата отправки счета", "Сумма"]
+    sheet.append(headers)
+
+    for item in queryset:
+        row = [
+            str(item.appointment),
+            "Да" if item.is_amount_insured else "Нет",
+            str(formats.date_format(item.date_sent, format="d.m.Y")),
+            item.amount,
+        ]
+        sheet.append(row)
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=bills.xlsx"
+
+    workbook.save(response)
+
+    return response
+
+
 # BILL_PAYMENTS:--------------------------------------------------------------------------------------------------------
 class BillPaymentListView(TitleMixin, ListView):
     template_name = "bill_payments/list.html"
     context_object_name = "bill_payments"
-    title = "Счета"
-    header = "Таблица с счетами"
+    title = "Счета и платежи"
+    header = "Таблица с счетами и платежами"
 
     def get_queryset(self):
         queryset = Bill.objects.annotate(total_payment=Sum("payment__amount")).annotate(
@@ -269,7 +407,6 @@ def export_bill_payments(request):
     workbook.save(response)
 
     return response
-
 
 # def patient_list(request):
 #     patients = Patient.objects.all()

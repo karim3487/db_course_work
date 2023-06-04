@@ -1,0 +1,122 @@
+[
+  {
+    "model": "app.doctor",
+    "pk": 1,
+    "fields": {
+      "first_name": "Иван",
+      "last_name": "Петров",
+      "surname": "Александрович",
+      "speciality": "Терапевт",
+      "phone_number": "123456789",
+      "email": "ivan@example.com",
+      "address": "Москва, ул. Примерная, 1",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  },
+  {
+    "model": "app.doctor",
+    "pk": 2,
+    "fields": {
+      "first_name": "Елена",
+      "last_name": "Смирнова",
+      "surname": "Андреевна",
+      "speciality": "Хирург",
+      "phone_number": "987654321",
+      "email": "elena@example.com",
+      "address": "Санкт-Петербург, ул. Тестовая, 2",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  },
+  {
+    "model": "app.doctor",
+    "pk": 3,
+    "fields": {
+      "first_name": "Алексей",
+      "last_name": "Иванов",
+      "surname": "Александрович",
+      "speciality": "Офтальмолог",
+      "phone_number": "555555555",
+      "email": "alexei@example.com",
+      "address": "Москва, ул. Тестовая, 3",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  },
+  {
+    "model": "app.doctor",
+    "pk": 4,
+    "fields": {
+      "first_name": "Мария",
+      "last_name": "Сидорова",
+      "surname": "Петровна",
+      "speciality": "Стоматолог",
+      "phone_number": "777777777",
+      "email": "maria@example.com",
+      "address": "Санкт-Петербург, ул. Примерная, 4",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  },
+  {
+    "model": "app.doctor",
+    "pk": 5,
+    "fields": {
+      "first_name": "Андрей",
+      "last_name": "Козлов",
+      "surname": "Дмитриевич",
+      "speciality": "Невролог",
+      "phone_number": "444444444",
+      "email": "andrey@example.com",
+      "address": "Москва, ул. Тестовая, 5",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  },
+  {
+    "model": "app.doctor",
+    "pk": 6,
+    "fields": {
+      "first_name": "Ольга",
+      "last_name": "Николаева",
+      "surname": "Сергеевна",
+      "speciality": "Акушер-гинеколог",
+      "phone_number": "666666666",
+      "email": "olga@example.com",
+      "address": "Санкт-Петербург, ул. Примерная, 6",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  },
+  {
+    "model": "app.doctor",
+    "pk": 7,
+    "fields": {
+      "first_name": "Дмитрий",
+      "last_name": "Ковалев",
+      "surname": "Алексеевич",
+      "speciality": "Оториноларинголог",
+      "phone_number": "333333333",
+      "email": "dmitry@example.com",
+      "address": "Москва, ул. Тестовая, 7",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  },
+  {
+    "model": "app.doctor",
+    "pk": 8,
+    "fields": {
+      "first_name": "Екатерина",
+      "last_name": "Волкова",
+      "surname": "Игоревна",
+      "speciality": "Педиатр",
+      "phone_number": "888888888",
+      "email": "ekaterina@example.com",
+      "address": "Санкт-Петербург, ул. Примерная, 8",
+      "created_at": "2023-05-18T20:42:24.460Z",
+      "updated_at": "2023-05-18T20:42:24.460Z"
+    }
+  }
+]

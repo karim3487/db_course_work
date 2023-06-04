@@ -1,0 +1,142 @@
+[
+  {
+    "model": "app.patient",
+    "pk": 1,
+    "fields": {
+      "first_name": "Иван",
+      "last_name": "Петров",
+      "surname": "Александрович",
+      "phone_number": "123456789",
+      "address": "Москва, ул. Примерная, 1",
+      "insurance_company": null,
+      "created_at": "2022-01-01T12:00:00Z",
+      "updated_at": "2022-01-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 2,
+    "fields": {
+      "first_name": "Елена",
+      "last_name": "Смирнова",
+      "surname": "Андреевна",
+      "phone_number": "987654321",
+      "address": "Санкт-Петербург, ул. Тестовая, 2",
+      "insurance_company": 1,
+      "created_at": "2022-02-01T12:00:00Z",
+      "updated_at": "2022-02-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 3,
+    "fields": {
+      "first_name": "Алексей",
+      "last_name": "Иванов",
+      "surname": "Александрович",
+      "phone_number": "555555555",
+      "address": "Москва, ул. Тестовая, 3",
+      "insurance_company": 2,
+      "created_at": "2022-03-01T12:00:00Z",
+      "updated_at": "2022-03-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 4,
+    "fields": {
+      "first_name": "Мария",
+      "last_name": "Сидорова",
+      "surname": "Петровна",
+      "phone_number": "777777777",
+      "address": "Санкт-Петербург, ул. Примерная, 4",
+      "insurance_company": null,
+      "created_at": "2022-04-01T12:00:00Z",
+      "updated_at": "2022-04-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 5,
+    "fields": {
+      "first_name": "Андрей",
+      "last_name": "Козлов",
+      "surname": "Дмитриевич",
+      "phone_number": "444444444",
+      "address": "Москва, ул. Тестовая, 5",
+      "insurance_company": 3,
+      "created_at": "2022-05-01T12:00:00Z",
+      "updated_at": "2022-05-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 6,
+    "fields": {
+      "first_name": "Ольга",
+      "last_name": "Морозова",
+      "surname": "Анатольевна",
+      "phone_number": "666666666",
+      "address": "Санкт-Петербург, ул. Примерная, 6",
+      "insurance_company": null,
+      "created_at": "2022-06-01T12:00:00Z",
+      "updated_at": "2022-06-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 7,
+    "fields": {
+      "first_name": "Александра",
+      "last_name": "Новикова",
+      "surname": "Сергеевна",
+      "phone_number": "222222222",
+      "address": "Москва, ул. Тестовая, 7",
+      "insurance_company": 4,
+      "created_at": "2022-07-01T12:00:00Z",
+      "updated_at": "2022-07-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 8,
+    "fields": {
+      "first_name": "Павел",
+      "last_name": "Васильев",
+      "surname": "Михайлович",
+      "phone_number": "888888888",
+      "address": "Санкт-Петербург, ул. Примерная, 8",
+      "insurance_company": null,
+      "created_at": "2022-08-01T12:00:00Z",
+      "updated_at": "2022-08-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 9,
+    "fields": {
+      "first_name": "Екатерина",
+      "last_name": "Соколова",
+      "surname": "Игоревна",
+      "phone_number": "999999999",
+      "address": "Москва, ул. Тестовая, 9",
+      "insurance_company": 5,
+      "created_at": "2022-09-01T12:00:00Z",
+      "updated_at": "2022-09-01T12:00:00Z"
+    }
+  },
+  {
+    "model": "app.patient",
+    "pk": 10,
+    "fields": {
+      "first_name": "Денис",
+      "last_name": "Федоров",
+      "surname": "Алексеевич",
+      "phone_number": "777777777",
+      "address": "Санкт-Петербург, ул. Примерная, 10",
+      "insurance_company": null,
+      "created_at": "2022-10-01T12:00:00Z",
+      "updated_at": "2022-10-01T12:00:00Z"
+    }
+  }
+]
