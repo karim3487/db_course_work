@@ -14,7 +14,8 @@ from app.forms import (
     PatientCreationForm,
     InsuranceCompanyCreationForm,
     AppointmentCreationForm,
-    BillCreationForm, PaymentCreationForm,
+    BillCreationForm,
+    PaymentCreationForm,
 )
 from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment
 from common.views import TitleMixin
@@ -383,29 +384,29 @@ class PaymentCreateView(TitleMixin, CreateView):
 
     def post(self, request, *args, **kwargs):
         data = request.POST
-        bill = Bill.objects.get(id=data['bill'])
+        bill = Bill.objects.get(id=data["bill"])
         patient = bill.appointment.patient
         ins_company = patient.insurance_company
 
-        date_str = '04.06.2023'
-        date_obj = datetime.strptime(date_str, '%d.%m.%Y')
-        formatted_date_str = date_obj.strftime('%Y-%m-%d')
+        date_str = "04.06.2023"
+        date_obj = datetime.strptime(date_str, "%d.%m.%Y")
+        formatted_date_str = date_obj.strftime("%Y-%m-%d")
         payment = Payment(
             patient=patient,
             insurance_company=ins_company,
             bill=bill,
-            amount=data['amount'],
-            date=formatted_date_str
+            amount=data["amount"],
+            date=formatted_date_str,
         )
         payment.save()
-        return redirect('hospital:payments')
+        return redirect("hospital:payments")
 
 
 class PaymentUpdateView(TitleMixin, UpdateView):
     model = Payment
     form_class = PaymentCreationForm
     title = "Изменение платежа"
-    template_name = "bill/update.html"
+    template_name = "payment/update.html"
     success_url = reverse_lazy("hospital:payments")
 
 
@@ -417,19 +418,19 @@ class PaymentDeleteView(TitleMixin, DeleteView):
 
 
 def export_payments(request):
-    queryset = Bill.objects.all()
+    queryset = Payment.objects.all()
 
     workbook = Workbook()
     sheet = workbook.active
 
-    headers = ["Прием", "Застрахован ли пациент", "Дата отправки счета", "Сумма"]
+    headers = ["Пациент", "Страховая компания", "Счет", "Сумма"]
     sheet.append(headers)
 
     for item in queryset:
         row = [
-            str(item.appointment),
-            "Да" if item.is_amount_insured else "Нет",
-            str(formats.date_format(item.date_sent, format="d.m.Y")),
+            str(item.patient),
+            "Не застрахован" if item.insurance_company else str(item.insurance_company),
+            item.bill,
             item.amount,
         ]
         sheet.append(row)
@@ -437,7 +438,7 @@ def export_payments(request):
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    response["Content-Disposition"] = "attachment; filename=bills.xlsx"
+    response["Content-Disposition"] = "attachment; filename=payment.xlsx"
 
     workbook.save(response)
 
@@ -495,27 +496,3 @@ def export_bill_payments(request):
     workbook.save(response)
 
     return response
-
-# def patient_list(request):
-#     patients = Patient.objects.all()
-#     return render(request, 'patient_list.html', {'patients': patients})
-#
-#
-# def patient_detail(request, patient_id):
-#     patient = get_object_or_404(Patient, id=patient_id)
-#     return render(request, 'patient_detail.html', {'patient': patient})
-#
-#
-# def appointment_list(request):
-#     appointments = Appointment.objects.all()
-#     return render(request, 'appointment_list.html', {'appointments': appointments})
-#
-#
-# def appointment_detail(request, appointment_id):
-#     appointment = get_object_or_404(Appointment, id=appointment_id)
-#     return render(request, 'appointment_detail.html', {'appointment': appointment})
-#
-#
-# def bill_list(request):
-#     bills = Bill.objects.all()
-#     return render(request, 'bill_list.html', {'bills': bills})

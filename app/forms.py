@@ -255,26 +255,6 @@ class PaymentCreationForm(forms.ModelForm):
         ),
     )
 
-    # patient = forms.ModelChoiceField(
-    #     queryset=Patient.objects.all(),
-    #     widget=forms.Select(
-    #         attrs={
-    #             "class": "form-select py-2",
-    #             "placeholder": "Выберите пациента",
-    #         }
-    #     ),
-    # )
-    #
-    # insurance_company = forms.ModelChoiceField(
-    #     queryset=InsuranceCompany.objects.all(),
-    #     widget=forms.Select(
-    #         attrs={
-    #             "class": "form-select py-2",
-    #             "placeholder": "Выберите страховую копанию",
-    #         }
-    #     ),
-    # )
-
     amount = forms.FloatField(
         widget=forms.NumberInput(
             attrs={
@@ -296,8 +276,6 @@ class PaymentCreationForm(forms.ModelForm):
     class Meta:
         model = Payment
         fields = (
-            # "patient",
-            # "insurance_company",
             "bill",
             "amount",
             "date",

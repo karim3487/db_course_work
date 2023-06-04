@@ -28,7 +28,12 @@ from .views import (
     AppointmentCreateView,
     AppointmentUpdateView,
     AppointmentDeleteView,
-    export_appointments, PaymentListView, PaymentCreateView, PaymentUpdateView, PaymentDeleteView, export_payments,
+    export_appointments,
+    PaymentListView,
+    PaymentCreateView,
+    PaymentUpdateView,
+    PaymentDeleteView,
+    export_payments,
 )
 
 app_name = "hospital"
