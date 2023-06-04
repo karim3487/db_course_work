@@ -1,7 +1,9 @@
 import locale
 from datetime import datetime
 
-from django.db.models import Sum, F
+from django.db import models
+from django.db.models import Sum, F, Value, Subquery, OuterRef
+from django.db.models.functions import Concat, Left
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -453,9 +455,45 @@ class BillPaymentListView(TitleMixin, ListView):
     header = "Таблица с счетами и платежами"
 
     def get_queryset(self):
-        queryset = Bill.objects.annotate(total_payment=Sum("payment__amount")).annotate(
-            balance=F("amount") - F("total_payment")
+        total_payment_subquery = (
+            Payment.objects.filter(bill_id=OuterRef("id"))
+            .values("bill_id")
+            .annotate(total_payment=Sum("amount"))
+            .values("total_payment")
         )
+
+        queryset = (
+            Bill.objects.select_related("appointment__doctor")
+            .annotate(
+                total_payment=Subquery(
+                    total_payment_subquery, output_field=models.DecimalField()
+                )
+            )
+            .annotate(
+                balance=F("amount") - F("total_payment"),
+                doctor=Concat(
+                    F("appointment__doctor__first_name"),
+                    Value(" "),
+                    Left(F("appointment__doctor__last_name"), 1),
+                    Value(". "),
+                    Left(F("appointment__doctor__surname"), 1),
+                    Value(". — "),
+                    F("appointment__doctor__speciality"),
+                ),
+                patient=Concat(
+                    F("appointment__patient__first_name"),
+                    Value(" "),
+                    Left(F("appointment__patient__last_name"), 1),
+                    Value(". "),
+                    Left(F("appointment__patient__surname"), 1),
+                    Value("."),
+                ),
+            )
+        )
+        # queryset = Bill.objects.annotate(total_payment=Sum("payment__amount")).annotate(
+        #     balance=F("amount") - F("total_payment")
+        # ).annotate(doctor=Concat(F("appointment__doctor__first_name"), Value(" "), F("appointment__doctor__last_name"),
+        #                          Value(" "), F("appointment__doctor__surname")))
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -474,11 +512,20 @@ def export_bill_payments(request):
     workbook = Workbook()
     sheet = workbook.active
 
-    headers = ["Сумма", "Дата отправки", "Общая сумма платежей", "Остаток"]
+    headers = [
+        "Доктор",
+        "Пациент",
+        "Сумма за прием",
+        "Дата отправки счета",
+        "Общая сумма платежей",
+        "Остаток",
+    ]
     sheet.append(headers)
 
     for item in queryset:
         row = [
+            str(item.appointment.doctor),
+            str(item.appointment.patient),
             item.amount,
             item.date_sent,
             item.total_payment,

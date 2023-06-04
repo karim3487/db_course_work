@@ -13,7 +13,9 @@
 {% endblock %}
 
 {% block ths %}
-    <th scope="col">Сумма</th>
+    <th scope="col">Доктор</th>
+    <th scope="col">Пациент</th>
+    <th scope="col">Сумма за прием</th>
     <th scope="col">Дата отправки счета</th>
     <th scope="col">Общая сумма платежей</th>
     <th scope="col">Остаток</th>
@@ -22,6 +24,8 @@
 {% block trs %}
     {% for bill_payment in bill_payments %}
         <tr>
+            <td class="align-middle">{{ bill_payment.doctor }}</td>
+            <td class="align-middle">{{ bill_payment.patient }}</td>
             <td class="align-middle">{{ bill_payment.amount }} руб.</td>
             <td class="align-middle">{{ bill_payment.date_sent }}</td>
             <td class="align-middle">{% if bill_payment.total_payment %}
