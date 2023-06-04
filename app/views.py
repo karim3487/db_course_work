@@ -255,7 +255,7 @@ def export_bill_payments(request):
             item.amount,
             item.date_sent,
             item.total_payment,
-            item.balance if item.balance > 0 else "Оплачено"
+            item.balance if item.balance > 0 else "Оплачено",
         ]
         sheet.append(row)
 
@@ -269,6 +269,7 @@ def export_bill_payments(request):
     workbook.save(response)
 
     return response
+
 
 # def patient_list(request):
 #     patients = Patient.objects.all()

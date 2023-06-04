@@ -81,7 +81,7 @@ class Patient(BaseDatesModel):
         return f"{self.short_name}"
 
 
-class Appointment(BaseDatesModel):
+class Appointment(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     datetime = models.DateTimeField(help_text="Дата и время приема")
@@ -95,7 +95,8 @@ class Appointment(BaseDatesModel):
         return f"{self.doctor} - {self.patient.full_name}"
 
 
-class Bill(BaseDatesModel):
+class Bill(models.Model):
+    appointment = models.OneToOneField("Appointment", on_delete=models.CASCADE, related_name="bill", default=None)
     is_amount_insured = models.BooleanField(default=False)
     date_sent = models.DateField(auto_now_add=True)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
@@ -103,14 +104,30 @@ class Bill(BaseDatesModel):
     class Meta:
         ordering = ("date_sent",)
         verbose_name = "Счет за прием"
-        verbose_name_plural = "Счет за приемы"
+        verbose_name_plural = "Счета за приемы"
 
     def __str__(self):
-        return f"{self.amount}"
+        doctor_name = self.appointment.doctor.full_name
+        patient_name = self.appointment.patient.full_name
+        return f"{doctor_name} - {patient_name} - {self.amount}"
 
 
 class Payment(models.Model):
-    bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
+    patient = models.ForeignKey(
+        Patient,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="payment"
+    )
+    insurance_company = models.ForeignKey(
+        InsuranceCompany,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="payment"
+    )
+    bill = models.ForeignKey(Bill, on_delete=models.CASCADE, related_name="payment")
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     date = models.DateField()
 
