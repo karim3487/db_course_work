@@ -14,7 +14,7 @@
 
 {% block ths %}
     <th scope="col">Сумма</th>
-    <th scope="col">Дата отправки</th>
+    <th scope="col">Дата отправки счета</th>
     <th scope="col">Общая сумма платежей</th>
     <th scope="col">Остаток</th>
 {% endblock %}
@@ -24,12 +24,22 @@
         <tr>
             <td class="align-middle">{{ bill_payment.amount }} руб.</td>
             <td class="align-middle">{{ bill_payment.date_sent }}</td>
-            <td class="align-middle">{{ bill_payment.total_payment }} руб.</td>
-            <td class="align-middle">{% if bill_payment.balance > 0 %}
-                {{ bill_payment.balance }} руб.
+            <td class="align-middle">{% if bill_payment.total_payment %}
+                {{ bill_payment.total_payment }}
             {% else %}
-                Оплачено
-            {% endif %}</td>
+                0
+            {% endif %} руб.
+            </td>
+            <td class="align-middle">
+                {% if bill_payment.balance %}
+                    {% if bill_payment.balance > 0 %}
+                        {{ bill_payment.balance }} руб.
+                    {% else %}
+                        Оплачено
+                    {% endif %}</td>
+                {% else %}
+                    {{ bill_payment.amount }} руб.
+                {% endif %}
         </tr>
     {% endfor %}
 {% endblock %}
