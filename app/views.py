@@ -472,28 +472,24 @@ class BillPaymentListView(TitleMixin, ListView):
             .annotate(
                 balance=F("amount") - F("total_payment"),
                 doctor=Concat(
-                    F("appointment__doctor__first_name"),
+                    F("appointment__doctor__last_name"),
                     Value(" "),
-                    Left(F("appointment__doctor__last_name"), 1),
+                    Left(F("appointment__doctor__first_name"), 1),
                     Value(". "),
                     Left(F("appointment__doctor__surname"), 1),
                     Value(". — "),
                     F("appointment__doctor__speciality"),
                 ),
                 patient=Concat(
-                    F("appointment__patient__first_name"),
+                    F("appointment__patient__last_name"),
                     Value(" "),
-                    Left(F("appointment__patient__last_name"), 1),
+                    Left(F("appointment__patient__first_name"), 1),
                     Value(". "),
                     Left(F("appointment__patient__surname"), 1),
                     Value("."),
                 ),
             )
         )
-        # queryset = Bill.objects.annotate(total_payment=Sum("payment__amount")).annotate(
-        #     balance=F("amount") - F("total_payment")
-        # ).annotate(doctor=Concat(F("appointment__doctor__first_name"), Value(" "), F("appointment__doctor__last_name"),
-        #                          Value(" "), F("appointment__doctor__surname")))
         return queryset
 
     def get_context_data(self, **kwargs):
