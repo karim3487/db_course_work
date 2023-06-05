@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class BaseDatesModel(models.Model):
@@ -10,11 +11,48 @@ class BaseDatesModel(models.Model):
         abstract = True
 
 
+class Specialty(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ("name",)
+        verbose_name = "Специальность"
+        verbose_name_plural = "Специальности"
+
+    def __str__(self):
+        return self.name
+
+
+class Schedule(models.Model):
+    class DayOfWeeks(models.IntegerChoices):
+        MONDAY = 0, _("Понедельник")
+        TUESDAY = 1, _("Вторник")
+        WEDNESDAY = 2, _("Среда")
+        THURSDAY = 3, _("Четверг")
+        FRIDAY = 4, _("Пятница")
+        SATURDAY = 5, _("Суббота")
+        SUNDAY = 6, _("Воскресенье")
+
+    doctor = models.ForeignKey("Doctor", on_delete=models.CASCADE)
+    day_of_week = models.IntegerField(choices=DayOfWeeks.choices, default=DayOfWeeks.MONDAY)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    class Meta:
+        ordering = ("doctor",)
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"
+
+    def __str__(self):
+        return f"{self.doctor.short_name}, {self.get_day_of_week_display()}"
+
+
 class Doctor(BaseDatesModel):
     first_name = models.CharField(max_length=32, help_text="Имя")
     last_name = models.CharField(max_length=32, help_text="Фамилия")
     surname = models.CharField(max_length=32, help_text="Отчество")
-    speciality = models.CharField(max_length=64, help_text="Специальность")
+    specialty = models.ForeignKey("Specialty", on_delete=models.RESTRICT, help_text="Специальность")
     phone_number = models.CharField(max_length=64, help_text="Номер телефона")
     email = models.EmailField()
     address = models.CharField(max_length=254, help_text="Адрес")
@@ -27,13 +65,17 @@ class Doctor(BaseDatesModel):
     def short_name(self):
         return f"{self.last_name} {self.first_name[0]}. {self.surname[0]}."
 
+    @property
+    def get_specialty(self):
+        return self.specialty.name
+
     class Meta:
         ordering = ("last_name",)
         verbose_name = "Врач"
         verbose_name_plural = "Врачи"
 
     def __str__(self):
-        return f"{self.short_name} – {self.speciality}"
+        return f"{self.short_name}, {self.get_specialty}"
 
 
 class InsuranceCompany(BaseDatesModel):
@@ -82,12 +124,12 @@ class Patient(BaseDatesModel):
 
 
 class Appointment(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    datetime = models.DateTimeField(help_text="Дата и время приема")
+    doctor = models.ForeignKey("Doctor", on_delete=models.CASCADE)
+    patient = models.ForeignKey("Patient", on_delete=models.CASCADE)
+    date = models.DateField(help_text="Дата приема")
+    time = models.TimeField(help_text="Время приема")
 
     class Meta:
-        ordering = ("datetime",)
         verbose_name = "Прием у врача"
         verbose_name_plural = "Приемы у врачей"
 
@@ -114,16 +156,16 @@ class Bill(models.Model):
 
 class Payment(models.Model):
     patient = models.ForeignKey(
-        Patient, null=True, blank=True, on_delete=models.CASCADE, related_name="payment"
+        "Patient", null=True, blank=True, on_delete=models.CASCADE, related_name="payment"
     )
     insurance_company = models.ForeignKey(
-        InsuranceCompany,
+        "InsuranceCompany",
         null=True,
         blank=True,
         on_delete=models.CASCADE,
         related_name="payment",
     )
-    bill = models.ForeignKey(Bill, on_delete=models.CASCADE, related_name="payment")
+    bill = models.ForeignKey("Bill", on_delete=models.CASCADE, related_name="payment")
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     date = models.DateField()
 

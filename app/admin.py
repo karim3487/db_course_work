@@ -1,10 +1,11 @@
 from django.contrib import admin
 
-from app.models import Doctor, Patient, InsuranceCompany, Payment, Bill, Appointment
-
-admin.site.register(Doctor)
-admin.site.register(Patient)
-admin.site.register(InsuranceCompany)
-admin.site.register(Bill)
-admin.site.register(Payment)
-admin.site.register(Appointment)
+from app import models
+admin.site.register(models.Specialty)
+admin.site.register(models.Schedule)
+admin.site.register(models.Doctor)
+admin.site.register(models.Patient)
+admin.site.register(models.InsuranceCompany)
+admin.site.register(models.Bill)
+admin.site.register(models.Payment)
+admin.site.register(models.Appointment)
