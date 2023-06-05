@@ -216,16 +216,6 @@ class BillCreationForm(forms.ModelForm):
         ),
     )
 
-    is_amount_insured = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(
-            attrs={
-                "class": "form-check-input",
-                "placeholder": "Введите номер телефона",
-            }
-        ),
-    )
-
     amount = forms.FloatField(
         widget=forms.NumberInput(
             attrs={
@@ -239,7 +229,6 @@ class BillCreationForm(forms.ModelForm):
         model = Bill
         fields = (
             "appointment",
-            "is_amount_insured",
             "amount",
         )
 

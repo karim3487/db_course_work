@@ -315,8 +315,22 @@ class BillCreateView(TitleMixin, CreateView):
     model = Bill
     form_class = BillCreationForm
     template_name = "bill/create.html"
-    success_url = reverse_lazy("hospital:bills")
     title = "Добавление счета"
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        appointment = Appointment.objects.get(id=data['appointment'])
+        patient = appointment.patient
+        ins_company = patient.insurance_company
+        is_amount_insured = True if ins_company else False
+
+        bill = Bill(
+            appointment=appointment,
+            is_amount_insured=is_amount_insured,
+            amount=data['amount'],
+        )
+        bill.save()
+        return redirect("hospital:bills")
 
 
 class BillUpdateView(TitleMixin, UpdateView):

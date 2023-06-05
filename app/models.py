@@ -33,7 +33,7 @@ class Doctor(BaseDatesModel):
         verbose_name_plural = "Врачи"
 
     def __str__(self):
-        return f"{self.short_name} — {self.speciality}"
+        return f"{self.short_name} – {self.speciality}"
 
 
 class InsuranceCompany(BaseDatesModel):
@@ -92,7 +92,7 @@ class Appointment(models.Model):
         verbose_name_plural = "Приемы у врачей"
 
     def __str__(self):
-        return f"{self.doctor} - {self.patient}"
+        return f"{self.doctor} — {self.patient}"
 
 
 class Bill(models.Model):
