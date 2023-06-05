@@ -207,7 +207,7 @@ class AppointmentCreationForm(forms.ModelForm):
 
 class BillCreationForm(forms.ModelForm):
     appointment = forms.ModelChoiceField(
-        queryset=Appointment.objects.all(),
+        queryset=Appointment.objects.filter(bill__isnull=True),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
