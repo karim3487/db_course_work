@@ -5,10 +5,11 @@ from django.db import models
 from django.db.models import Sum, F, Value, Subquery, OuterRef
 from django.db.models.functions import Concat, Left
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import formats
-from django.views.generic import CreateView, ListView, DeleteView, UpdateView
+# from django.views import View
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView, FormView
 from openpyxl import Workbook
 
 from app.forms import (
@@ -18,8 +19,9 @@ from app.forms import (
     AppointmentCreationForm,
     BillCreationForm,
     PaymentCreationForm,
+    SpecialtyForm,
 )
-from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment
+from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment, Specialty
 from common.views import TitleMixin
 
 
@@ -293,6 +295,15 @@ def export_appointments(request):
     workbook.save(response)
 
     return response
+
+
+# SPECIALTY:-----------------------------------------------------------------------------------------------------------------
+class SpecialtySelectView(TitleMixin, FormView):
+    model = Specialty
+    form_class = SpecialtyForm
+    title = "Выбор специальности"
+    template_name = "specialty/choice_specialty.html"
+    success_url = reverse_lazy("hospital:create_app")
 
 
 # BILL:-----------------------------------------------------------------------------------------------------------------
