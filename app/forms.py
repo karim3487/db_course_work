@@ -1,6 +1,6 @@
 from django import forms
 
-from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill, Payment
+from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill, Payment, Specialty
 from tempus_dominus.widgets import DateTimePicker, DatePicker
 
 
@@ -166,106 +166,115 @@ class InsuranceCompanyCreationForm(forms.ModelForm):
         )
 
 
-class AppointmentCreationForm(forms.ModelForm):
-    doctor = forms.ModelChoiceField(
-        queryset=Doctor.objects.all(),
+class SpecialtyForm(forms.ModelForm):
+    specialty = forms.ModelChoiceField(
+        queryset=Specialty.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
-                "placeholder": "Выберите доктора",
+                "placeholder": "Выберите специальность",
             }
         ),
     )
 
-    patient = forms.ModelChoiceField(
-        queryset=Patient.objects.all(),
-        widget=forms.Select(
-            attrs={
-                "class": "form-select py-2",
-                "placeholder": "Выберите пациента",
-            }
-        ),
-    )
-
-    datetime = forms.DateTimeField(
-        widget=DateTimePicker(
-            attrs={
-                "class": "form-control py-2",
-                "placeholder": "Выберите время и дату",
-            }
-        )
-    )
-
-    class Meta:
-        model = Appointment
-        fields = (
-            "doctor",
-            "patient",
-            "datetime",
+    class AppointmentCreationForm(forms.ModelForm):
+        doctor = forms.ModelChoiceField(
+            queryset=Doctor.objects.all(),
+            widget=forms.Select(
+                attrs={
+                    "class": "form-select py-2",
+                    "placeholder": "Выберите доктора",
+                }
+            ),
         )
 
-
-class BillCreationForm(forms.ModelForm):
-    appointment = forms.ModelChoiceField(
-        queryset=Appointment.objects.filter(bill__isnull=True),
-        widget=forms.Select(
-            attrs={
-                "class": "form-select py-2",
-                "placeholder": "Выберите прием",
-            }
-        ),
-    )
-
-    amount = forms.FloatField(
-        widget=forms.NumberInput(
-            attrs={
-                "class": "form-control py-2",
-                "placeholder": "Введите счет за прием",
-            }
-        )
-    )
-
-    class Meta:
-        model = Bill
-        fields = (
-            "appointment",
-            "amount",
+        patient = forms.ModelChoiceField(
+            queryset=Patient.objects.all(),
+            widget=forms.Select(
+                attrs={
+                    "class": "form-select py-2",
+                    "placeholder": "Выберите пациента",
+                }
+            ),
         )
 
-
-class PaymentCreationForm(forms.ModelForm):
-    bill = forms.ModelChoiceField(
-        queryset=Bill.objects.all(),
-        widget=forms.Select(
-            attrs={
-                "class": "form-select py-2",
-                "placeholder": "Выберите страховую копанию",
-            }
-        ),
-    )
-
-    amount = forms.FloatField(
-        widget=forms.NumberInput(
-            attrs={
-                "class": "form-control py-2",
-                "placeholder": "Введите счет за прием",
-            }
+        datetime = forms.DateTimeField(
+            widget=DateTimePicker(
+                attrs={
+                    "class": "form-control py-2",
+                    "placeholder": "Выберите время и дату",
+                }
+            )
         )
-    )
 
-    date = forms.DateField(
-        widget=DatePicker(
-            attrs={
-                "class": "form-control py-2",
-                "placeholder": "Выберите дату",
-            }
-        )
-    )
+        class Meta:
+            model = Appointment
+            fields = (
+                "doctor",
+                "patient",
+                "datetime",
+            )
 
-    class Meta:
-        model = Payment
-        fields = (
-            "bill",
-            "amount",
-            "date",
+    class BillCreationForm(forms.ModelForm):
+        appointment = forms.ModelChoiceField(
+            queryset=Appointment.objects.filter(bill__isnull=True),
+            widget=forms.Select(
+                attrs={
+                    "class": "form-select py-2",
+                    "placeholder": "Выберите прием",
+                }
+            ),
         )
+
+        amount = forms.FloatField(
+            widget=forms.NumberInput(
+                attrs={
+                    "class": "form-control py-2",
+                    "placeholder": "Введите счет за прием",
+                }
+            )
+        )
+
+        class Meta:
+            model = Bill
+            fields = (
+                "appointment",
+                "amount",
+            )
+
+    class PaymentCreationForm(forms.ModelForm):
+        bill = forms.ModelChoiceField(
+            queryset=Bill.objects.all(),
+            widget=forms.Select(
+                attrs={
+                    "class": "form-select py-2",
+                    "placeholder": "Выберите страховую копанию",
+                }
+            ),
+        )
+
+        amount = forms.FloatField(
+            widget=forms.NumberInput(
+                attrs={
+                    "class": "form-control py-2",
+                    "placeholder": "Введите счет за прием",
+                }
+            )
+        )
+
+        date = forms.DateField(
+            widget=DatePicker(
+                attrs={
+                    "class": "form-control py-2",
+                    "placeholder": "Выберите дату",
+                }
+            )
+        )
+
+        class Meta:
+            model = Payment
+            fields = (
+                "bill",
+                "amount",
+                "date",
+            )

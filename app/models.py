@@ -123,6 +123,16 @@ class Patient(BaseDatesModel):
         return f"{self.short_name}"
 
 
+class Talon(models.Model):
+    doctor = models.ForeignKey("Doctor", on_delete=models.CASCADE)
+    date = models.DateField(help_text="Дата талона")
+    time = models.TimeField(help_text="Время талона")
+    patient = models.ForeignKey("Patient", on_delete=models.CASCADE, blank=True, null=True)
+
+    class Meta:
+        unique_together = ("doctor", "date", "time")
+
+
 class Appointment(models.Model):
     doctor = models.ForeignKey("Doctor", on_delete=models.CASCADE)
     patient = models.ForeignKey("Patient", on_delete=models.CASCADE)
