@@ -1,0 +1,45 @@
+@import "main.css";
+
+#regForm {
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 10px
+}
+
+.tab {
+    display: none
+}
+
+#prevBtn {
+    background-color: #bbbbbb
+}
+
+.step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5
+}
+
+.step.active {
+    opacity: 1
+}
+
+.step.finish {
+    background-color: #4CAF50
+}
+
+.all-steps {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 10px
+}
+
+.row-height {
+    height: 80px;
+}

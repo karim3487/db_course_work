@@ -183,6 +183,49 @@ class SpecialtyForm(forms.ModelForm):
             "specialty",
         )
 
+class AppointmentForm(forms.ModelForm):
+
+    specialty = forms.ModelChoiceField(
+        queryset=Specialty.objects.all(),
+        label="Специальность",
+    )
+
+    doctor = forms.ModelChoiceField(
+        queryset=Doctor.objects.none(),
+        label="Врач",
+        required=False,
+    )
+
+    date = forms.DateField(label="Дата")
+
+    time = forms.TimeField(label="Время")
+
+    class Meta:
+        model = Appointment
+        fields = ('specialty', 'date', 'time')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Hide the doctor field until the specialty is selected
+        self.fields['doctor'].widget.attrs['disabled'] = True
+
+        # When the specialty is changed, enable the doctor field
+        self.fields['specialty'].widget.onchange = self.enable_doctor_field
+
+    def enable_doctor_field(self, *args):
+        specialty = self.cleaned_data['specialty']
+        self.fields['doctor'].queryset = Doctor.objects.filter(specialty=specialty)
+        self.fields['doctor'].widget.attrs['disabled'] = False
+
+    def clean_doctor(self):
+        doctor_id = self.cleaned_data['doctor'].pk
+        doctor = Doctor.objects.get(pk=doctor_id)
+        if doctor is None:
+            raise forms.ValidationError("Врач не найден")
+        return doctor
+
+
 class AppointmentCreationForm(forms.ModelForm):
     doctor = forms.ModelChoiceField(
         queryset=Doctor.objects.all(),
@@ -212,6 +255,12 @@ class AppointmentCreationForm(forms.ModelForm):
             }
         )
     )
+
+    def __init__(self, *args, **kwargs):
+        self.specialty = kwargs.pop('specialty', None)
+        super().__init__(*args, **kwargs)
+        if self.specialty:
+            self.fields['doctor'].queryset = Doctor.objects.filter(specialty=self.specialty)
 
     class Meta:
         model = Appointment

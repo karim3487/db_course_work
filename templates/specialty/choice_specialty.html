@@ -16,7 +16,7 @@
                 </button>
             </div>
         {% endif %}
-        <form action="{% url 'hospital:select_spec' %}" method="post">
+        <form action="{% url 'hospital:create_app' %}" method="post">
             {% csrf_token %}
             <div class="row justify-content-center mb-3">
                 <div class="col-md-6">

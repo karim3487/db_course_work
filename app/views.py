@@ -2,14 +2,14 @@ import locale
 from datetime import datetime
 
 from django.db import models
-from django.db.models import Sum, F, Value, Subquery, OuterRef
+from django.db.models import Sum, F, Value, Subquery, OuterRef, Count
 from django.db.models.functions import Concat, Left
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import formats
 # from django.views import View
-from django.views.generic import CreateView, ListView, DeleteView, UpdateView, FormView
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView, FormView, TemplateView
 from openpyxl import Workbook
 
 from app.forms import (
@@ -18,10 +18,9 @@ from app.forms import (
     InsuranceCompanyCreationForm,
     AppointmentCreationForm,
     BillCreationForm,
-    PaymentCreationForm,
-    SpecialtyForm,
+    PaymentCreationForm, SpecialtyForm, AppointmentForm,
 )
-from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment, Specialty
+from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment, Specialty, Talon
 from common.views import TitleMixin
 
 
@@ -246,12 +245,18 @@ class AppointmentListView(TitleMixin, ListView):
         return context
 
 
-class AppointmentCreateView(TitleMixin, CreateView):
+class AppointmentCreateView(TitleMixin, FormView):
     model = Appointment
-    form_class = AppointmentCreationForm
+    form_class = AppointmentForm
     template_name = "appointment/create.html"
     success_url = reverse_lazy("hospital:appointments")
     title = "Добавление приема"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['specialties'] = Specialty.objects.annotate(num_talons=Count('doctor__talon')).all()
+        context['doctors'] = Doctor.objects.annotate(num_talons=Count("talon")).all()
+        return context
 
 
 class AppointmentUpdateView(TitleMixin, UpdateView):
@@ -304,6 +309,11 @@ class SpecialtySelectView(TitleMixin, FormView):
     title = "Выбор специальности"
     template_name = "specialty/choice_specialty.html"
     success_url = reverse_lazy("hospital:create_app")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['specialties'] = Specialty.objects.all()
+        return context
 
 
 # BILL:-----------------------------------------------------------------------------------------------------------------
