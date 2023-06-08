@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "app",
     "tempus_dominus",
+    "bootstrap_datepicker_plus",
 ]
 
 MIDDLEWARE = [

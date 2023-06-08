@@ -1,3 +1,4 @@
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 
 from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill, Payment, Specialty
@@ -183,47 +184,23 @@ class SpecialtyForm(forms.ModelForm):
             "specialty",
         )
 
+
 class AppointmentForm(forms.ModelForm):
-
-    specialty = forms.ModelChoiceField(
-        queryset=Specialty.objects.all(),
-        label="Специальность",
+    patient = forms.ModelChoiceField(
+        queryset=Patient.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите пациента",
+            }
+        ),
     )
-
-    doctor = forms.ModelChoiceField(
-        queryset=Doctor.objects.none(),
-        label="Врач",
-        required=False,
-    )
-
-    date = forms.DateField(label="Дата")
-
-    time = forms.TimeField(label="Время")
 
     class Meta:
         model = Appointment
-        fields = ('specialty', 'date', 'time')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Hide the doctor field until the specialty is selected
-        self.fields['doctor'].widget.attrs['disabled'] = True
-
-        # When the specialty is changed, enable the doctor field
-        self.fields['specialty'].widget.onchange = self.enable_doctor_field
-
-    def enable_doctor_field(self, *args):
-        specialty = self.cleaned_data['specialty']
-        self.fields['doctor'].queryset = Doctor.objects.filter(specialty=specialty)
-        self.fields['doctor'].widget.attrs['disabled'] = False
-
-    def clean_doctor(self):
-        doctor_id = self.cleaned_data['doctor'].pk
-        doctor = Doctor.objects.get(pk=doctor_id)
-        if doctor is None:
-            raise forms.ValidationError("Врач не найден")
-        return doctor
+        fields = (
+            "patient",
+        )
 
 
 class AppointmentCreationForm(forms.ModelForm):
@@ -270,6 +247,7 @@ class AppointmentCreationForm(forms.ModelForm):
             "datetime",
         )
 
+
 class BillCreationForm(forms.ModelForm):
     appointment = forms.ModelChoiceField(
         queryset=Appointment.objects.filter(bill__isnull=True),
@@ -296,6 +274,7 @@ class BillCreationForm(forms.ModelForm):
             "appointment",
             "amount",
         )
+
 
 class PaymentCreationForm(forms.ModelForm):
     bill = forms.ModelChoiceField(

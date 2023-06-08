@@ -43,3 +43,8 @@
 .row-height {
     height: 80px;
 }
+
+.limited-container {
+  max-height: 400px;
+  overflow-y: auto;
+}

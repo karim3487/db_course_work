@@ -256,8 +256,14 @@ class AppointmentCreateView(TitleMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['specialties'] = Specialty.objects.annotate(num_talons=Count('doctor__talon')).all()
         context['doctors'] = Doctor.objects.annotate(num_talons=Count("talon")).all()
+        context['patients'] = Patient.objects.all()
+        context['talons'] = Talon.objects.values('id', 'doctor', 'date', 'time', 'patient_id')
+        context['dates'] = Talon.objects.values('doctor', 'date').distinct()
         return context
 
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        print(data)
 
 class AppointmentUpdateView(TitleMixin, UpdateView):
     model = Appointment
