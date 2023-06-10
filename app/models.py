@@ -1,3 +1,5 @@
+import locale
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -131,6 +133,16 @@ class Talon(models.Model):
 
     class Meta:
         unique_together = ("doctor", "date", "time")
+
+    def __str__(self):
+        locale.setlocale(locale.LC_TIME, 'ru_RU')
+
+        formatted_date = self.date.strftime('%d %B %Y, %a').capitalize()
+        formatted_time = self.time.strftime('%H:%M')
+
+        locale.setlocale(locale.LC_TIME, '')
+
+        return f"{formatted_date}, {formatted_time}"
 
 
 class Appointment(models.Model):

@@ -1,7 +1,7 @@
 from django import forms
 
-from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill, Payment, Specialty
-from tempus_dominus.widgets import DateTimePicker, DatePicker
+from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill, Payment, Specialty, Schedule, Talon
+from tempus_dominus.widgets import DateTimePicker, DatePicker, TimePicker
 
 
 class DoctorCreationForm(forms.ModelForm):
@@ -177,17 +177,8 @@ class SpecialtyForm(forms.ModelForm):
         ),
     )
 
-class AppointmentCreationForm(forms.ModelForm):
-    doctor = forms.ModelChoiceField(
-        queryset=Doctor.objects.all(),
-        widget=forms.Select(
-            attrs={
-                "class": "form-select py-2",
-                "placeholder": "Выберите доктора",
-            }
-        ),
-    )
 
+class AppointmentCreationForm(forms.Form):
     patient = forms.ModelChoiceField(
         queryset=Patient.objects.all(),
         widget=forms.Select(
@@ -198,22 +189,48 @@ class AppointmentCreationForm(forms.ModelForm):
         ),
     )
 
-    datetime = forms.DateTimeField(
-        widget=DateTimePicker(
+    specialty = forms.ModelChoiceField(
+        queryset=Specialty.objects.all(),
+        widget=forms.Select(
             attrs={
-                "class": "form-control py-2",
-                "placeholder": "Выберите время и дату",
+                "class": "form-select py-2",
+                "placeholder": "Выберите специальность",
             }
-        )
+        ),
     )
 
+    doctor = forms.ModelChoiceField(
+        queryset=Doctor.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите доктора",
+            }
+        ),
+    )
+
+    talon = forms.ModelChoiceField(
+        queryset=Talon.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите доктора",
+            }
+        ),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['doctor'].queryset = Doctor.objects.none()
+        self.fields['talon'].queryset = Talon.objects.none()
+
     class Meta:
-        model = Appointment
         fields = (
             "doctor",
             "patient",
-            "datetime",
+            "specialty"
         )
+
 
 class BillCreationForm(forms.ModelForm):
     appointment = forms.ModelChoiceField(
@@ -241,6 +258,7 @@ class BillCreationForm(forms.ModelForm):
             "appointment",
             "amount",
         )
+
 
 class PaymentCreationForm(forms.ModelForm):
     bill = forms.ModelChoiceField(

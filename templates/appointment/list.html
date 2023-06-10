@@ -25,7 +25,7 @@
         <tr>
             <td class="align-middle">{{ app.doctor }}</td>
             <td class="align-middle">{{ app.patient }}</td>
-            <td class="align-middle">{{ app.datetime }}</td>
+            <td class="align-middle">{{ app.date }}, {{ app.time }}</td>
             <td class="align-middle">
                 <a href="{% url 'hospital:update_app' app.pk %}" class="btn btn-success">
                     <i class="fa-solid fa-edit"></i>

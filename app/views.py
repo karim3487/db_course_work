@@ -5,10 +5,10 @@ from django.db import models
 from django.db.models import Sum, F, Value, Subquery, OuterRef
 from django.db.models.functions import Concat, Left
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import formats
-from django.views.generic import CreateView, ListView, DeleteView, UpdateView
+from django.views.generic import CreateView, ListView, DeleteView, UpdateView, FormView
 from openpyxl import Workbook
 
 from app.forms import (
@@ -17,9 +17,9 @@ from app.forms import (
     InsuranceCompanyCreationForm,
     AppointmentCreationForm,
     BillCreationForm,
-    PaymentCreationForm,
+    PaymentCreationForm, RegistrationForm,
 )
-from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment
+from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment, Specialty, Talon
 from common.views import TitleMixin
 
 
@@ -229,6 +229,20 @@ def export_ins_companies(request):
 
 
 # APPOINTMENT:----------------------------------------------------------------------------------------------------------
+def load_doctors(request):
+    spec_id = request.GET.get('specialty')
+    doctors = Doctor.objects.filter(specialty_id=spec_id).order_by('last_name')
+    print(doctors)
+    return render(request, 'appointment/doctor_dropdown_list_options.html', {'doctors': doctors})
+
+
+def load_talons(request):
+    doc_id = request.GET.get('doctor')
+    talons = Talon.objects.filter(doctor_id=doc_id, patient__talon__isnull=True).order_by('date')
+    print(talons)
+    return render(request, 'appointment/talon_dropdown_list_options.html', {'talons': talons})
+
+
 class AppointmentListView(TitleMixin, ListView):
     model = Appointment
     template_name = "appointment/list.html"
@@ -244,20 +258,73 @@ class AppointmentListView(TitleMixin, ListView):
         return context
 
 
-class AppointmentCreateView(TitleMixin, CreateView):
-    model = Appointment
+class AppointmentCreateView(TitleMixin, FormView):
     form_class = AppointmentCreationForm
     template_name = "appointment/create.html"
     success_url = reverse_lazy("hospital:appointments")
     title = "Добавление приема"
 
+    def post(self, request, *args, **kwargs):
+        data = request.POST
 
-class AppointmentUpdateView(TitleMixin, UpdateView):
-    model = Appointment
+        doctor = Doctor.objects.get(pk=data['doctor'])
+        patient = Patient.objects.get(pk=data['patient'])
+        talon = Talon.objects.get(pk=data['talon'])
+
+        app = Appointment.objects.create(
+            doctor=doctor,
+            patient=patient,
+            date=talon.date,
+            time=talon.time
+        )
+        print(talon.id)
+        talon.patient = patient
+        talon.save()
+
+        return redirect("hospital:appointments")
+
+
+class AppointmentUpdateView(TitleMixin, FormView):
     form_class = AppointmentCreationForm
     title = "Изменение приема"
     template_name = "appointment/update.html"
     success_url = reverse_lazy("hospital:appointments")
+
+    def get_initial(self):
+        initial = super().get_initial()
+        app_id = self.request.path.split('/')[-2]
+        app = Appointment.objects.get(pk=app_id)
+        initial['patient'] = app.patient.id
+        initial['specialty'] = app.doctor.specialty.id
+        initial['doctor'] = app.doctor.id
+
+        return initial
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+
+        doctor = Doctor.objects.get(pk=data['doctor'])
+        patient = Patient.objects.get(pk=data['patient'])
+        talon = Talon.objects.get(pk=data['talon'])
+
+        app = Appointment.objects.get(pk=kwargs['pk'])
+
+        talon_to_update = Talon.objects.filter(doctor=app.doctor, patient=app.patient, date=app.date,
+                                               time=app.time).get()
+        talon_to_update.patient = None
+        talon_to_update.save()
+
+        app.doctor = doctor
+        app.patient = patient
+        app.date = talon.date
+        app.time = talon.time
+        app.save()
+
+        print(talon.id)
+        talon.patient = patient
+        talon.save()
+
+        return redirect("hospital:appointments")
 
 
 class AppointmentDeleteView(TitleMixin, DeleteView):

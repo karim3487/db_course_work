@@ -1,10 +1,10 @@
 import datetime
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from datetime import timedelta
 
-from .models import Schedule, Talon
+from .models import Schedule, Talon, Appointment
 
 
 @receiver(post_save, sender=Schedule)
@@ -32,3 +32,20 @@ def generate_talons_for_schedule(sender, instance, created, **kwargs):
                 current_datetime = datetime.datetime.combine(weekday, current_time)
                 current_datetime += timedelta(minutes=30)
                 current_time = current_datetime.time()
+
+
+@receiver(post_delete, sender=Appointment)
+def clean_talon_data(sender, instance, **kwargs):
+    appointment = instance
+    talons = Talon.objects.filter(
+        doctor=appointment.doctor,
+        patient=appointment.patient,
+        date=appointment.date,
+        time=appointment.time
+    )
+
+    if len(talons) == 1:
+        talons[0].patient = None
+        talons[0].save()
+    else:
+        print("len of talons", len(talons))

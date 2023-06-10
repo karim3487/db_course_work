@@ -12,19 +12,11 @@
                 </button>
             </div>
         {% endif %}
-        <form action="{% url 'hospital:create_app' %}" method="post">
+        <form method="POST" id="appForm" data-doctors-url="{% url 'hospital:ajax_load_doctors' %}"
+              data-talons-url="{% url 'hospital:ajax_load_talons' %}">
             {% csrf_token %}
             <div class="row justify-content-center mb-3">
-                <div class="col-md-3">
-                    <label class="form-label">Врач</label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fa-solid fa-stethoscope"></i>
-                        </span>
-                        {{ form.doctor }}
-                    </div>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label class="form-label">Пациент</label>
                     <div class="input-group">
                         <span class="input-group-text">
@@ -33,9 +25,34 @@
                         {{ form.patient }}
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Дата и время</label>
-                        {{ form.datetime }}
+                <div class="col-md-4">
+                    <label class="form-label">Специальность</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-stethoscope"></i>
+                        </span>
+                        {{ form.specialty }}
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Врач</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-stethoscope"></i>
+                        </span>
+                        {{ form.doctor }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Талон</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-clock"></i>
+                        </span>
+                        {{ form.talon }}
+                    </div>
                 </div>
             </div>
             <div class="row justify-content-center">
@@ -45,5 +62,36 @@
             </div>
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#id_specialty").change(function () {
+            var url = $("#appForm").attr("data-doctors-url");
+            var specialtyId = $(this).val();
 
+            $.ajax({
+                url: url,
+                data: {
+                    'specialty': specialtyId
+                },
+                success: function (data) {
+                    $("#id_doctor").html(data);
+                }
+            });
+
+        });
+        $("#id_doctor").change(function () {
+            var url = $("#appForm").attr("data-talons-url");
+            var docId = $(this).val();
+
+            $.ajax({
+                url: url,
+                data: {
+                    'doctor': docId
+                },
+                success: function (data) {
+                    $("#id_talon").html(data);
+                }
+            });
+        });
+    </script>
 {% endblock %}

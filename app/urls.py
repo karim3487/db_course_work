@@ -76,6 +76,9 @@ urlpatterns = [
     ),
     # appointment
     path("appointments/", AppointmentListView.as_view(), name="appointments"),
+    path("appointments/reg", views.registration_view, name="reg_app"),
+    path("ajax/load-doctors", views.load_doctors, name="ajax_load_doctors"),
+    path("ajax/load-talons", views.load_talons, name="ajax_load_talons"),
     path("appointments/create", AppointmentCreateView.as_view(), name="create_app"),
     path(
         "appointments/<pk>/update", AppointmentUpdateView.as_view(), name="update_app"
