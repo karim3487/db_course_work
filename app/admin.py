@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from app import models
+
 admin.site.register(models.Specialty)
 admin.site.register(models.Schedule)
 admin.site.register(models.Doctor)

@@ -1,7 +1,6 @@
 from django import forms
-
-from app.models import Doctor, InsuranceCompany, Patient, Appointment, Bill, Payment, Specialty, Schedule, Talon
-from tempus_dominus.widgets import DateTimePicker, DatePicker, TimePicker
+from app import models
+from tempus_dominus.widgets import DatePicker
 
 
 class DoctorCreationForm(forms.ModelForm):
@@ -57,7 +56,7 @@ class DoctorCreationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Doctor
+        model = models.Doctor
         fields = (
             "first_name",
             "last_name",
@@ -107,7 +106,7 @@ class PatientCreationForm(forms.ModelForm):
     )
 
     insurance_company = forms.ModelChoiceField(
-        queryset=InsuranceCompany.objects.all(),
+        queryset=models.InsuranceCompany.objects.all(),
         required=False,
         widget=forms.Select(
             attrs={
@@ -118,7 +117,7 @@ class PatientCreationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Patient
+        model = models.Patient
         fields = (
             "first_name",
             "last_name",
@@ -158,7 +157,7 @@ class InsuranceCompanyCreationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = InsuranceCompany
+        model = models.InsuranceCompany
         fields = (
             "name",
             "phone_number",
@@ -168,7 +167,7 @@ class InsuranceCompanyCreationForm(forms.ModelForm):
 
 class SpecialtyForm(forms.ModelForm):
     specialty = forms.ModelChoiceField(
-        queryset=Specialty.objects.all(),
+        queryset=models.Specialty.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
@@ -180,7 +179,7 @@ class SpecialtyForm(forms.ModelForm):
 
 class AppointmentCreationForm(forms.Form):
     patient = forms.ModelChoiceField(
-        queryset=Patient.objects.all(),
+        queryset=models.Patient.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
@@ -190,7 +189,7 @@ class AppointmentCreationForm(forms.Form):
     )
 
     specialty = forms.ModelChoiceField(
-        queryset=Specialty.objects.all(),
+        queryset=models.Specialty.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
@@ -200,7 +199,7 @@ class AppointmentCreationForm(forms.Form):
     )
 
     doctor = forms.ModelChoiceField(
-        queryset=Doctor.objects.all(),
+        queryset=models.Doctor.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
@@ -210,7 +209,7 @@ class AppointmentCreationForm(forms.Form):
     )
 
     talon = forms.ModelChoiceField(
-        queryset=Talon.objects.all(),
+        queryset=models.Talon.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
@@ -221,20 +220,16 @@ class AppointmentCreationForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['doctor'].queryset = Doctor.objects.none()
-        self.fields['talon'].queryset = Talon.objects.none()
+        self.fields["doctor"].queryset = models.Doctor.objects.none()
+        self.fields["talon"].queryset = models.Talon.objects.none()
 
     class Meta:
-        fields = (
-            "doctor",
-            "patient",
-            "specialty"
-        )
+        fields = ("doctor", "patient", "specialty")
 
 
 class BillCreationForm(forms.ModelForm):
     appointment = forms.ModelChoiceField(
-        queryset=Appointment.objects.filter(bill__isnull=True),
+        queryset=models.Appointment.objects.filter(bill__isnull=True),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
@@ -253,7 +248,7 @@ class BillCreationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Bill
+        model = models.Bill
         fields = (
             "appointment",
             "amount",
@@ -262,7 +257,7 @@ class BillCreationForm(forms.ModelForm):
 
 class PaymentCreationForm(forms.ModelForm):
     bill = forms.ModelChoiceField(
-        queryset=Bill.objects.all(),
+        queryset=models.Bill.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-select py-2",
@@ -290,7 +285,7 @@ class PaymentCreationForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Payment
+        model = models.Payment
         fields = (
             "bill",
             "amount",

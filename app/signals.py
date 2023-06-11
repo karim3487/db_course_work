@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from datetime import timedelta
 
@@ -24,7 +24,7 @@ def generate_talons_for_schedule(sender, instance, created, **kwargs):
         for weekday in weekdays:
             current_time = schedule.start_time
             while current_time < schedule.end_time:
-                talon = Talon.objects.create(
+                Talon.objects.create(
                     doctor=doctor,
                     date=weekday,
                     time=current_time,
@@ -41,7 +41,7 @@ def clean_talon_data(sender, instance, **kwargs):
         doctor=appointment.doctor,
         patient=appointment.patient,
         date=appointment.date,
-        time=appointment.time
+        time=appointment.time,
     )
 
     if len(talons) == 1:

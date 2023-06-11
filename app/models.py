@@ -37,7 +37,9 @@ class Schedule(models.Model):
         SUNDAY = 6, _("Воскресенье")
 
     doctor = models.ForeignKey("Doctor", on_delete=models.CASCADE)
-    day_of_week = models.IntegerField(choices=DayOfWeeks.choices, default=DayOfWeeks.MONDAY)
+    day_of_week = models.IntegerField(
+        choices=DayOfWeeks.choices, default=DayOfWeeks.MONDAY
+    )
     start_time = models.TimeField()
     end_time = models.TimeField()
 
@@ -54,7 +56,9 @@ class Doctor(BaseDatesModel):
     first_name = models.CharField(max_length=32, help_text="Имя")
     last_name = models.CharField(max_length=32, help_text="Фамилия")
     surname = models.CharField(max_length=32, help_text="Отчество")
-    specialty = models.ForeignKey("Specialty", on_delete=models.RESTRICT, help_text="Специальность")
+    specialty = models.ForeignKey(
+        "Specialty", on_delete=models.RESTRICT, help_text="Специальность"
+    )
     phone_number = models.CharField(max_length=64, help_text="Номер телефона")
     email = models.EmailField()
     address = models.CharField(max_length=254, help_text="Адрес")
@@ -129,18 +133,20 @@ class Talon(models.Model):
     doctor = models.ForeignKey("Doctor", on_delete=models.CASCADE)
     date = models.DateField(help_text="Дата талона")
     time = models.TimeField(help_text="Время талона")
-    patient = models.ForeignKey("Patient", on_delete=models.CASCADE, blank=True, null=True)
+    patient = models.ForeignKey(
+        "Patient", on_delete=models.CASCADE, blank=True, null=True
+    )
 
     class Meta:
         unique_together = ("doctor", "date", "time")
 
     def __str__(self):
-        locale.setlocale(locale.LC_TIME, 'ru_RU')
+        locale.setlocale(locale.LC_TIME, "ru_RU")
 
-        formatted_date = self.date.strftime('%d %B %Y, %a').capitalize()
-        formatted_time = self.time.strftime('%H:%M')
+        formatted_date = self.date.strftime("%d %B %Y, %a").capitalize()
+        formatted_time = self.time.strftime("%H:%M")
 
-        locale.setlocale(locale.LC_TIME, '')
+        locale.setlocale(locale.LC_TIME, "")
 
         return f"{formatted_date}, {formatted_time}"
 
@@ -178,7 +184,11 @@ class Bill(models.Model):
 
 class Payment(models.Model):
     patient = models.ForeignKey(
-        "Patient", null=True, blank=True, on_delete=models.CASCADE, related_name="payment"
+        "Patient",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="payment",
     )
     insurance_company = models.ForeignKey(
         "InsuranceCompany",

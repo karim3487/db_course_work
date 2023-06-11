@@ -17,9 +17,9 @@ from app.forms import (
     InsuranceCompanyCreationForm,
     AppointmentCreationForm,
     BillCreationForm,
-    PaymentCreationForm, RegistrationForm,
+    PaymentCreationForm,
 )
-from app.models import Doctor, Patient, InsuranceCompany, Bill, Payment, Appointment, Specialty, Talon
+from app import models
 from common.views import TitleMixin
 
 
@@ -29,7 +29,7 @@ def index(request):
 
 # DOCTOR:---------------------------------------------------------------------------------------------------------------
 class DoctorListView(TitleMixin, ListView):
-    model = Doctor
+    model = models.Doctor
     template_name = "doctor/list.html"
     title = "Врачи"
     header = "Таблица с врачами"
@@ -44,7 +44,7 @@ class DoctorListView(TitleMixin, ListView):
 
 
 class DoctorCreateView(TitleMixin, CreateView):
-    model = Doctor
+    model = models.Doctor
     form_class = DoctorCreationForm
     template_name = "doctor/create.html"
     success_url = reverse_lazy("hospital:doctors")
@@ -52,7 +52,7 @@ class DoctorCreateView(TitleMixin, CreateView):
 
 
 class DoctorUpdateView(TitleMixin, UpdateView):
-    model = Doctor
+    model = models.Doctor
     form_class = DoctorCreationForm
     title = "Изменение врача"
     template_name = "doctor/update.html"
@@ -60,14 +60,14 @@ class DoctorUpdateView(TitleMixin, UpdateView):
 
 
 class DoctorDeleteView(TitleMixin, DeleteView):
-    model = Doctor
+    model = models.Doctor
     success_url = reverse_lazy("hospital:doctors")
     template_name = "confirm_delete.html"
     title = "Удаление врача"
 
 
 def export_doctors(request):
-    queryset = Doctor.objects.all()
+    queryset = models.Doctor.objects.all()
 
     workbook = Workbook()
     sheet = workbook.active
@@ -97,7 +97,7 @@ def export_doctors(request):
 
 # PATIENT:--------------------------------------------------------------------------------------------------------------
 class PatientListView(TitleMixin, ListView):
-    model = Patient
+    model = models.Patient
     template_name = "patient/list.html"
     title = "Пациенты"
     header = "Таблица с пациентами"
@@ -112,7 +112,7 @@ class PatientListView(TitleMixin, ListView):
 
 
 class PatientCreateView(TitleMixin, CreateView):
-    model = Patient
+    model = models.Patient
     form_class = PatientCreationForm
     template_name = "patient/create.html"
     success_url = reverse_lazy("hospital:patients")
@@ -120,7 +120,7 @@ class PatientCreateView(TitleMixin, CreateView):
 
 
 class PatientUpdateView(TitleMixin, UpdateView):
-    model = Patient
+    model = models.Patient
     form_class = PatientCreationForm
     title = "Изменение пациента"
     template_name = "patient/update.html"
@@ -128,14 +128,14 @@ class PatientUpdateView(TitleMixin, UpdateView):
 
 
 class PatientDeleteView(TitleMixin, DeleteView):
-    model = Patient
+    model = models.Patient
     success_url = reverse_lazy("hospital:patients")
     template_name = "confirm_delete.html"
     title = "Удаление пациента"
 
 
 def export_patients(request):
-    queryset = Patient.objects.all()
+    queryset = models.Patient.objects.all()
 
     workbook = Workbook()
     sheet = workbook.active
@@ -164,7 +164,7 @@ def export_patients(request):
 
 # INS_COMPANIES---------------------------------------------------------------------------------------------------------
 class InsuranceCompanyListView(TitleMixin, ListView):
-    model = InsuranceCompany
+    model = models.InsuranceCompany
     template_name = "ins_company/list.html"
     title = "Страховые компании"
     header = "Таблица со страховыми компаниями"
@@ -179,7 +179,7 @@ class InsuranceCompanyListView(TitleMixin, ListView):
 
 
 class InsuranceCompanyCreateView(TitleMixin, CreateView):
-    model = InsuranceCompany
+    model = models.Imodels.nsuranceCompany
     form_class = InsuranceCompanyCreationForm
     template_name = "ins_company/create.html"
     success_url = reverse_lazy("hospital:ins_companies")
@@ -187,7 +187,7 @@ class InsuranceCompanyCreateView(TitleMixin, CreateView):
 
 
 class InsuranceCompanyUpdateView(TitleMixin, UpdateView):
-    model = InsuranceCompany
+    model = models.InsuranceCompany
     form_class = InsuranceCompanyCreationForm
     title = "Изменение страховой компании"
     template_name = "ins_company/update.html"
@@ -195,14 +195,14 @@ class InsuranceCompanyUpdateView(TitleMixin, UpdateView):
 
 
 class InsuranceCompanyDeleteView(TitleMixin, DeleteView):
-    model = InsuranceCompany
+    model = models.InsuranceCompany
     success_url = reverse_lazy("hospital:ins_companies")
     template_name = "confirm_delete.html"
     title = "Удаление страховой компании"
 
 
 def export_ins_companies(request):
-    queryset = InsuranceCompany.objects.all()
+    queryset = models.InsuranceCompany.objects.all()
 
     workbook = Workbook()
     sheet = workbook.active
@@ -230,21 +230,27 @@ def export_ins_companies(request):
 
 # APPOINTMENT:----------------------------------------------------------------------------------------------------------
 def load_doctors(request):
-    spec_id = request.GET.get('specialty')
-    doctors = Doctor.objects.filter(specialty_id=spec_id).order_by('last_name')
+    spec_id = request.GET.get("specialty")
+    doctors = models.Doctor.objects.filter(specialty_id=spec_id).order_by("last_name")
     print(doctors)
-    return render(request, 'appointment/doctor_dropdown_list_options.html', {'doctors': doctors})
+    return render(
+        request, "appointment/doctor_dropdown_list_options.html", {"doctors": doctors}
+    )
 
 
 def load_talons(request):
-    doc_id = request.GET.get('doctor')
-    talons = Talon.objects.filter(doctor_id=doc_id, patient__talon__isnull=True).order_by('date')
+    doc_id = request.GET.get("doctor")
+    talons = models.Talon.objects.filter(
+        doctor_id=doc_id, patient__talon__isnull=True
+    ).order_by("date")
     print(talons)
-    return render(request, 'appointment/talon_dropdown_list_options.html', {'talons': talons})
+    return render(
+        request, "appointment/talon_dropdown_list_options.html", {"talons": talons}
+    )
 
 
 class AppointmentListView(TitleMixin, ListView):
-    model = Appointment
+    model = models.Appointment
     template_name = "appointment/list.html"
     title = "Приемы"
     header = "Таблица с приемами"
@@ -267,15 +273,12 @@ class AppointmentCreateView(TitleMixin, FormView):
     def post(self, request, *args, **kwargs):
         data = request.POST
 
-        doctor = Doctor.objects.get(pk=data['doctor'])
-        patient = Patient.objects.get(pk=data['patient'])
-        talon = Talon.objects.get(pk=data['talon'])
+        doctor = models.Doctor.objects.get(pk=data["doctor"])
+        patient = models.Patient.objects.get(pk=data["patient"])
+        talon = models.Talon.objects.get(pk=data["talon"])
 
-        app = Appointment.objects.create(
-            doctor=doctor,
-            patient=patient,
-            date=talon.date,
-            time=talon.time
+        app = models.Appointment.objects.create(
+            doctor=doctor, patient=patient, date=talon.date, time=talon.time
         )
         print(talon.id)
         talon.patient = patient
@@ -292,25 +295,26 @@ class AppointmentUpdateView(TitleMixin, FormView):
 
     def get_initial(self):
         initial = super().get_initial()
-        app_id = self.request.path.split('/')[-2]
-        app = Appointment.objects.get(pk=app_id)
-        initial['patient'] = app.patient.id
-        initial['specialty'] = app.doctor.specialty.id
-        initial['doctor'] = app.doctor.id
+        app_id = self.request.path.split("/")[-2]
+        app = models.Appointment.objects.get(pk=app_id)
+        initial["patient"] = app.patient.id
+        initial["specialty"] = app.doctor.specialty.id
+        initial["doctor"] = app.doctor.id
 
         return initial
 
     def post(self, request, *args, **kwargs):
         data = request.POST
 
-        doctor = Doctor.objects.get(pk=data['doctor'])
-        patient = Patient.objects.get(pk=data['patient'])
-        talon = Talon.objects.get(pk=data['talon'])
+        doctor = models.Doctor.objects.get(pk=data["doctor"])
+        patient = models.Patient.objects.get(pk=data["patient"])
+        talon = models.Talon.objects.get(pk=data["talon"])
 
-        app = Appointment.objects.get(pk=kwargs['pk'])
+        app = models.Appointment.objects.get(pk=kwargs["pk"])
 
-        talon_to_update = Talon.objects.filter(doctor=app.doctor, patient=app.patient, date=app.date,
-                                               time=app.time).get()
+        talon_to_update = models.Talon.objects.filter(
+            doctor=app.doctor, patient=app.patient, date=app.date, time=app.time
+        ).get()
         talon_to_update.patient = None
         talon_to_update.save()
 
@@ -328,7 +332,7 @@ class AppointmentUpdateView(TitleMixin, FormView):
 
 
 class AppointmentDeleteView(TitleMixin, DeleteView):
-    model = Appointment
+    model = models.Appointment
     success_url = reverse_lazy("hospital:appointments")
     template_name = "confirm_delete.html"
     title = "Удаление приема"
@@ -336,7 +340,7 @@ class AppointmentDeleteView(TitleMixin, DeleteView):
 
 def export_appointments(request):
     locale.setlocale(locale.LC_TIME, "ru_RU")
-    queryset = Appointment.objects.all()
+    queryset = models.Appointment.objects.all()
 
     workbook = Workbook()
     sheet = workbook.active
@@ -364,7 +368,7 @@ def export_appointments(request):
 
 # BILL:-----------------------------------------------------------------------------------------------------------------
 class BillListView(TitleMixin, ListView):
-    model = Bill
+    model = models.Bill
     template_name = "bill/list.html"
     title = "Счета"
     header = "Таблица со счетами"
@@ -379,29 +383,29 @@ class BillListView(TitleMixin, ListView):
 
 
 class BillCreateView(TitleMixin, CreateView):
-    model = Bill
+    model = models.Bill
     form_class = BillCreationForm
     template_name = "bill/create.html"
     title = "Добавление счета"
 
     def post(self, request, *args, **kwargs):
         data = request.POST
-        appointment = Appointment.objects.get(id=data['appointment'])
+        appointment = models.Appointment.objects.get(id=data["appointment"])
         patient = appointment.patient
         ins_company = patient.insurance_company
         is_amount_insured = True if ins_company else False
 
-        bill = Bill(
+        bill = models.Bill(
             appointment=appointment,
             is_amount_insured=is_amount_insured,
-            amount=data['amount'],
+            amount=data["amount"],
         )
         bill.save()
         return redirect("hospital:bills")
 
 
 class BillUpdateView(TitleMixin, UpdateView):
-    model = Bill
+    model = models.Bill
     form_class = BillCreationForm
     title = "Изменение счета"
     template_name = "bill/update.html"
@@ -409,14 +413,14 @@ class BillUpdateView(TitleMixin, UpdateView):
 
 
 class BillDeleteView(TitleMixin, DeleteView):
-    model = Bill
+    model = models.Bill
     success_url = reverse_lazy("hospital:bills")
     template_name = "confirm_delete.html"
     title = "Удаление счета"
 
 
 def export_bills(request):
-    queryset = Bill.objects.all()
+    queryset = models.Bill.objects.all()
 
     workbook = Workbook()
     sheet = workbook.active
@@ -445,7 +449,7 @@ def export_bills(request):
 
 # PAYMENT:-----------------------------------------------------------------------------------------------------------------
 class PaymentListView(TitleMixin, ListView):
-    model = Payment
+    model = models.Payment
     template_name = "payment/list.html"
     title = "Платежи"
     header = "Таблица с платежами"
@@ -460,21 +464,21 @@ class PaymentListView(TitleMixin, ListView):
 
 
 class PaymentCreateView(TitleMixin, CreateView):
-    model = Payment
+    model = models.Payment
     form_class = PaymentCreationForm
     template_name = "payment/create.html"
     title = "Добавление платежа"
 
     def post(self, request, *args, **kwargs):
         data = request.POST
-        bill = Bill.objects.get(id=data["bill"])
+        bill = models.Bill.objects.get(id=data["bill"])
         patient = bill.appointment.patient
         ins_company = patient.insurance_company
 
         date_str = "04.06.2023"
         date_obj = datetime.strptime(date_str, "%d.%m.%Y")
         formatted_date_str = date_obj.strftime("%Y-%m-%d")
-        payment = Payment(
+        payment = models.Payment(
             patient=patient,
             insurance_company=ins_company,
             bill=bill,
@@ -486,7 +490,7 @@ class PaymentCreateView(TitleMixin, CreateView):
 
 
 class PaymentUpdateView(TitleMixin, UpdateView):
-    model = Payment
+    model = models.Payment
     form_class = PaymentCreationForm
     title = "Изменение платежа"
     template_name = "payment/update.html"
@@ -494,14 +498,14 @@ class PaymentUpdateView(TitleMixin, UpdateView):
 
 
 class PaymentDeleteView(TitleMixin, DeleteView):
-    model = Payment
+    model = models.Payment
     success_url = reverse_lazy("hospital:payments")
     template_name = "confirm_delete.html"
     title = "Удаление платежа"
 
 
 def export_payments(request):
-    queryset = Payment.objects.all()
+    queryset = models.Payment.objects.all()
 
     workbook = Workbook()
     sheet = workbook.active
@@ -537,14 +541,14 @@ class BillPaymentListView(TitleMixin, ListView):
 
     def get_queryset(self):
         total_payment_subquery = (
-            Payment.objects.filter(bill_id=OuterRef("id"))
+            models.Payment.objects.filter(bill_id=OuterRef("id"))
             .values("bill_id")
             .annotate(total_payment=Sum("amount"))
             .values("total_payment")
         )
 
         queryset = (
-            Bill.objects.select_related("appointment__doctor")
+            models.Bill.objects.select_related("appointment__doctor")
             .annotate(
                 total_payment=Subquery(
                     total_payment_subquery, output_field=models.DecimalField()
@@ -575,16 +579,18 @@ class BillPaymentListView(TitleMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        total_payment_sum = Payment.objects.aggregate(total=Sum("amount"))["total"]
+        total_payment_sum = models.Payment.objects.aggregate(total=Sum("amount"))[
+            "total"
+        ]
         context["total_payment_sum"] = total_payment_sum
         return context
 
 
 def export_bill_payments(request):
-    queryset = Bill.objects.annotate(total_payment=Sum("payment__amount")).annotate(
-        balance=F("amount") - F("total_payment")
-    )
-    total_payment_sum = Payment.objects.aggregate(total=Sum("amount"))["total"]
+    queryset = models.Bill.objects.annotate(
+        total_payment=Sum("payment__amount")
+    ).annotate(balance=F("amount") - F("total_payment"))
+    total_payment_sum = models.Payment.objects.aggregate(total=Sum("amount"))["total"]
 
     workbook = Workbook()
     sheet = workbook.active
