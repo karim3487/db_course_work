@@ -1,8 +1,7 @@
 import locale
 from datetime import datetime
 
-from django.db import models
-from django.db.models import Sum, F, Value, Subquery, OuterRef
+from django.db.models import Sum, F, Value, Subquery, OuterRef, DecimalField
 from django.db.models.functions import Concat, Left
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -179,7 +178,7 @@ class InsuranceCompanyListView(TitleMixin, ListView):
 
 
 class InsuranceCompanyCreateView(TitleMixin, CreateView):
-    model = models.Imodels.nsuranceCompany
+    model = models.InsuranceCompany
     form_class = InsuranceCompanyCreationForm
     template_name = "ins_company/create.html"
     success_url = reverse_lazy("hospital:ins_companies")
@@ -551,7 +550,7 @@ class BillPaymentListView(TitleMixin, ListView):
             models.Bill.objects.select_related("appointment__doctor")
             .annotate(
                 total_payment=Subquery(
-                    total_payment_subquery, output_field=models.DecimalField()
+                    total_payment_subquery, output_field=DecimalField()
                 )
             )
             .annotate(
@@ -563,7 +562,7 @@ class BillPaymentListView(TitleMixin, ListView):
                     Value(". "),
                     Left(F("appointment__doctor__surname"), 1),
                     Value(". — "),
-                    F("appointment__doctor__speciality"),
+                    F("appointment__doctor__specialty__name"),
                 ),
                 patient=Concat(
                     F("appointment__patient__last_name"),

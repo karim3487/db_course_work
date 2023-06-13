@@ -23,7 +23,7 @@ def generate_talons_for_schedule(sender, instance, created, **kwargs):
 
         for weekday in weekdays:
             current_time = schedule.start_time
-            while current_time < schedule.end_time:
+            while current_time <= schedule.end_time:
                 Talon.objects.create(
                     doctor=doctor,
                     date=weekday,

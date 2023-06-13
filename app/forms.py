@@ -22,10 +22,14 @@ class DoctorCreationForm(forms.ModelForm):
         )
     )
 
-    speciality = forms.CharField(
-        widget=forms.TextInput(
-            attrs={"class": "form-control py-2", "placeholder": "Введите специальность"}
-        )
+    specialty = forms.ModelChoiceField(
+        queryset=models.Specialty.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-select py-2",
+                "placeholder": "Выберите специальность",
+            }
+        ),
     )
 
     phone_number = forms.CharField(
@@ -61,7 +65,7 @@ class DoctorCreationForm(forms.ModelForm):
             "first_name",
             "last_name",
             "surname",
-            "speciality",
+            "specialty",
             "phone_number",
             "email",
             "address",
